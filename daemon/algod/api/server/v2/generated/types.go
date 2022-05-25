@@ -259,6 +259,16 @@ type AssetParams struct {
 	UrlB64 *[]byte `json:"url-b64,omitempty"`
 }
 
+// Box defines model for Box.
+type Box struct {
+
+	// \[name\] box name.
+	Name string `json:"name"`
+
+	// \[value:b64\] box content.
+	Value map[string]interface{} `json:"value"`
+}
+
 // BuildVersion defines model for BuildVersion.
 type BuildVersion struct {
 	Branch      string `json:"branch"`
@@ -587,6 +597,9 @@ type BlockResponse struct {
 	// Optional certificate object. This is only included when the format is set to message pack.
 	Cert *map[string]interface{} `json:"cert,omitempty"`
 }
+
+// BoxResponse defines model for BoxResponse.
+type BoxResponse Box
 
 // CatchpointAbortResponse defines model for CatchpointAbortResponse.
 type CatchpointAbortResponse struct {
