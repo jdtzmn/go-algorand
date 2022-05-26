@@ -199,7 +199,7 @@ type LedgerForLogic interface {
 	AccountData(addr basics.Address) (ledgercore.AccountData, error)
 	Authorizer(addr basics.Address) (basics.Address, error)
 	Round() basics.Round
-	LatestTimestamp() int64
+	PrevTimestamp() int64
 
 	AssetHolding(addr basics.Address, assetIdx basics.AssetIndex) (basics.AssetHolding, error)
 	AssetParams(aidx basics.AssetIndex) (basics.AssetParams, basics.Address, error)
@@ -214,15 +214,26 @@ type LedgerForLogic interface {
 	SetGlobal(appIdx basics.AppIndex, key string, value basics.TealValue) error
 	DelGlobal(appIdx basics.AppIndex, key string) error
 
+	NewBox(appIdx basics.AppIndex, key string, size uint64) error
+	GetBox(appIdx basics.AppIndex, key string) (string, error)
+	SetBox(appIdx basics.AppIndex, key string, value string) error
+	DelBox(appIdx basics.AppIndex, key string) error
+
 	Perform(gi int, ep *EvalParams) error
 	Counter() uint64
 }
 
-// resources contains a list of apps and assets. It's used to track the apps and
-// assets created by a txgroup, for "free" access.
+// resources contains a catalog of available resources. It's used to track the
+// apps, assets, and boxes that are available to a transaction, outside the
+// direct foreign array mechanism.
 type resources struct {
 	asas []basics.AssetIndex
 	apps []basics.AppIndex
+
+	// boxes are all of the top-level box refs from the txgroup. Most are added
+	// during NewEvalParams(). refs using 0 on an appl create are resolved and
+	// added when the appl executes.
+	boxes map[basics.AppIndex][]string
 }
 
 // EvalParams contains data that comes into condition evaluation.
@@ -261,9 +272,12 @@ type EvalParams struct {
 	// Total allowable inner txns in a group transaction (nil before inner pooling enabled)
 	pooledAllowedInners *int
 
-	// created contains resources that may be used for "created" - they need not be in
-	// a foreign array. They remain empty until createdResourcesVersion.
-	created *resources
+	// available contains resources that may be used even though they are not
+	// necessarily directly in the txn's "static arrays". Apps and ASAs go in if
+	// the app or asa was created earlier in the txgroup (empty until
+	// createdResourcesVersion). Boxes go in when the ep is created, to share
+	// availability across all txns in the group.
+	available *resources
 
 	// Caching these here means the hashes can be shared across the TxnGroup
 	// (and inners, because the cache is shared with the inner EvalParams)
@@ -290,9 +304,31 @@ func copyWithClearAD(txgroup []transactions.SignedTxnWithAD) []transactions.Sign
 // NewEvalParams creates an EvalParams to use while evaluating a top-level txgroup
 func NewEvalParams(txgroup []transactions.SignedTxnWithAD, proto *config.ConsensusParams, specials *transactions.SpecialAddresses) *EvalParams {
 	apps := 0
+	var allBoxes map[basics.AppIndex][]string
 	for _, tx := range txgroup {
 		if tx.Txn.Type == protocol.ApplicationCallTx {
 			apps++
+			if allBoxes == nil && len(tx.Txn.Boxes) > 0 {
+				allBoxes = make(map[basics.AppIndex][]string)
+			}
+			for _, br := range tx.Txn.Boxes {
+				var app basics.AppIndex
+				if br.Index == 0 {
+					// 0 is the "current app". Ignore if this is a create, else use ApplicationID
+					if tx.Txn.ApplicationID == 0 {
+						// When the create actually happens, and we learn the appID, we'll make it _available_.
+						continue
+					}
+					app = tx.Txn.ApplicationID
+				} else {
+					// Bounds check will already have been done by
+					// WellFormed. For testing purposes, it's better to panic
+					// now than after returning a nil.
+					app = tx.Txn.ForeignApps[br.Index-1] // shift for the 0=this convention
+				}
+				appBoxes := allBoxes[app]
+				allBoxes[app] = append(appBoxes, br.Name)
+			}
 		}
 	}
 
@@ -331,15 +367,14 @@ func NewEvalParams(txgroup []transactions.SignedTxnWithAD, proto *config.Consens
 		FeeCredit:               &credit,
 		PooledApplicationBudget: pooledApplicationBudget,
 		pooledAllowedInners:     pooledAllowedInners,
-		created:                 &resources{},
+		available:               &resources{boxes: allBoxes},
 		appAddrCache:            make(map[basics.AppIndex]basics.Address),
 	}
 }
 
 // feeCredit returns the extra fee supplied in this top-level txgroup compared
 // to required minfee.  It can make assumptions about overflow because the group
-// is known OK according to TxnGroupBatchVerify. (In essence the group is
-// "WellFormed")
+// is known OK according to TxnGroupBatchVerify. (The group is "WellFormed")
 func feeCredit(txgroup []transactions.SignedTxnWithAD, minFee uint64) uint64 {
 	minFeeCount := uint64(0)
 	feesPaid := uint64(0)
@@ -351,8 +386,7 @@ func feeCredit(txgroup []transactions.SignedTxnWithAD, minFee uint64) uint64 {
 	}
 	// Overflow is impossible, because TxnGroupBatchVerify checked.
 	feeNeeded := minFee * minFeeCount
-
-	return feesPaid - feeNeeded
+	return basics.SubSaturate(feesPaid, feeNeeded)
 }
 
 // NewInnerEvalParams creates an EvalParams to be used while evaluating an inner group txgroup
@@ -386,7 +420,7 @@ func NewInnerEvalParams(txg []transactions.SignedTxnWithAD, caller *EvalContext)
 		PooledApplicationBudget: caller.PooledApplicationBudget,
 		pooledAllowedInners:     caller.pooledAllowedInners,
 		Ledger:                  caller.Ledger,
-		created:                 caller.created,
+		available:               caller.available,
 		appAddrCache:            caller.appAddrCache,
 		caller:                  caller,
 	}
@@ -437,17 +471,17 @@ func (ep *EvalParams) log() logging.Logger {
 // package. For example, after a acfg transaction is processed, the AD created
 // by the acfg is added to the EvalParams this way.
 func (ep *EvalParams) RecordAD(gi int, ad transactions.ApplyData) {
-	if ep.created == nil {
+	if ep.available == nil {
 		// This is a simplified ep. It won't be used for app evaluation, and
 		// shares the TxnGroup memory with the caller.  Don't touch anything!
 		return
 	}
 	ep.TxnGroup[gi].ApplyData = ad
 	if aid := ad.ConfigAsset; aid != 0 {
-		ep.created.asas = append(ep.created.asas, aid)
+		ep.available.asas = append(ep.available.asas, aid)
 	}
 	if aid := ad.ApplicationID; aid != 0 {
-		ep.created.apps = append(ep.created.apps, aid)
+		ep.available.apps = append(ep.available.apps, aid)
 	}
 }
 
@@ -622,6 +656,17 @@ func EvalContract(program []byte, gi int, aid basics.AppIndex, params *EvalParam
 	if cx.Proto.IsolateClearState && cx.txn.Txn.OnCompletion == transactions.ClearStateOC {
 		if cx.PooledApplicationBudget != nil && *cx.PooledApplicationBudget < cx.Proto.MaxAppProgramCost {
 			return false, nil, ClearStateBudgetError{*cx.PooledApplicationBudget}
+		}
+	}
+
+	// If this is a creation, make any "0 index" box refs available now that we
+	// have an appID.
+	if cx.txn.Txn.ApplicationID == 0 {
+		for _, br := range cx.txn.Txn.Boxes {
+			if br.Index == 0 {
+				appBoxes := cx.EvalParams.available.boxes[cx.appID]
+				cx.EvalParams.available.boxes[cx.appID] = append(appBoxes, br.Name)
+			}
 		}
 	}
 
@@ -2831,7 +2876,7 @@ func (cx *EvalContext) getRound() uint64 {
 }
 
 func (cx *EvalContext) getLatestTimestamp() (uint64, error) {
-	ts := cx.Ledger.LatestTimestamp()
+	ts := cx.Ledger.PrevTimestamp()
 	if ts < 0 {
 		return 0, fmt.Errorf("latest timestamp %d < 0", ts)
 	}
@@ -3550,7 +3595,7 @@ func (cx *EvalContext) accountReference(account stackValue) (basics.Address, uin
 	invalidIndex := uint64(len(cx.txn.Txn.Accounts) + 1)
 	// Allow an address for an app that was created in group
 	if err != nil && cx.version >= createdResourcesVersion {
-		for _, appID := range cx.created.apps {
+		for _, appID := range cx.available.apps {
 			createdAddress := cx.getApplicationAddress(appID)
 			if addr == createdAddress {
 				return addr, invalidIndex, nil
@@ -3906,7 +3951,7 @@ func appReference(cx *EvalContext, ref uint64, foreign bool) (basics.AppIndex, e
 		}
 		// or was created in group
 		if cx.version >= createdResourcesVersion {
-			for _, appID := range cx.created.apps {
+			for _, appID := range cx.available.apps {
 				if appID == basics.AppIndex(ref) {
 					return appID, nil
 				}
@@ -3945,7 +3990,7 @@ func asaReference(cx *EvalContext, ref uint64, foreign bool) (basics.AssetIndex,
 		}
 		// or was created in group
 		if cx.version >= createdResourcesVersion {
-			for _, assetID := range cx.created.asas {
+			for _, assetID := range cx.available.asas {
 				if assetID == basics.AssetIndex(ref) {
 					return assetID, nil
 				}
@@ -4234,7 +4279,7 @@ func (cx *EvalContext) availableAsset(sv stackValue) (basics.AssetIndex, error) 
 	}
 	// or was created in group
 	if cx.version >= createdResourcesVersion {
-		for _, assetID := range cx.created.asas {
+		for _, assetID := range cx.available.asas {
 			if assetID == aid {
 				return aid, nil
 			}
@@ -4262,7 +4307,7 @@ func (cx *EvalContext) availableApp(sv stackValue) (basics.AppIndex, error) {
 	}
 	// or was created in group
 	if cx.version >= createdResourcesVersion {
-		for _, appID := range cx.created.apps {
+		for _, appID := range cx.available.apps {
 			if appID == aid {
 				return aid, nil
 			}
