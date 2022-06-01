@@ -340,6 +340,28 @@
         },
         "description": "Box information"
       },
+      "BoxesResponse": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "boxes": {
+                  "description": "Box names",
+                  "items": {
+                    "$ref": "#/components/schemas/BoxName"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "boxes"
+              ],
+              "type": "object"
+            }
+          }
+        },
+        "description": "Boxes of an application"
+      },
       "CatchpointAbortResponse": {
         "content": {
           "application/json": {
@@ -1192,6 +1214,11 @@
           "value"
         ],
         "type": "object"
+      },
+      "BoxName": {
+        "description": "Box name, base64 encoded.",
+        "format": "byte",
+        "type": "string"
       },
       "BuildVersion": {
         "properties": {
@@ -2399,6 +2426,92 @@
           }
         },
         "summary": "Get application information."
+      }
+    },
+    "/v2/applications/{application-id}/boxes": {
+      "get": {
+        "description": "Given an application ID, it returns the box names of that application.",
+        "operationId": "GetApplicationBoxes",
+        "parameters": [
+          {
+            "description": "An application identifier",
+            "in": "path",
+            "name": "application-id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "boxes": {
+                      "description": "Box names",
+                      "items": {
+                        "$ref": "#/components/schemas/BoxName"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "boxes"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Boxes of an application"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid API Token"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Application Not Found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Error"
+          },
+          "default": {
+            "content": {},
+            "description": "Unknown Error"
+          }
+        },
+        "summary": "Get boxes for a given application."
       }
     },
     "/v2/applications/{application-id}/boxes/{box-name}": {

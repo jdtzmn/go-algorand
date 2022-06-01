@@ -269,6 +269,9 @@ type Box struct {
 	Value []byte `json:"value"`
 }
 
+// BoxName defines model for BoxName.
+type BoxName []byte
+
 // BuildVersion defines model for BuildVersion.
 type BuildVersion struct {
 	Branch      string `json:"branch"`
@@ -600,6 +603,13 @@ type BlockResponse struct {
 
 // BoxResponse defines model for BoxResponse.
 type BoxResponse Box
+
+// BoxesResponse defines model for BoxesResponse.
+type BoxesResponse struct {
+
+	// Box names
+	Boxes []BoxName `json:"boxes"`
+}
 
 // CatchpointAbortResponse defines model for CatchpointAbortResponse.
 type CatchpointAbortResponse struct {
