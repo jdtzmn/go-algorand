@@ -529,6 +529,14 @@ func (l *Ledger) LookupKv(rnd basics.Round, key string) (*string, error) {
 	return l.accts.LookupKv(rnd, key)
 }
 
+// ListKvKeysByPrefix returns a list of KV keys that match the given prefix
+func (l *Ledger) ListKvKeysByPrefix(rnd basics.Round, prefix string, maxResults uint64) ([]string, error) {
+	l.trackerMu.RLock()
+	defer l.trackerMu.RUnlock()
+
+	return l.accts.ListKvKeysByPrefix(rnd, prefix, maxResults)
+}
+
 // LookupAgreement returns account data used by agreement.
 func (l *Ledger) LookupAgreement(rnd basics.Round, addr basics.Address) (basics.OnlineAccountData, error) {
 	l.trackerMu.RLock()

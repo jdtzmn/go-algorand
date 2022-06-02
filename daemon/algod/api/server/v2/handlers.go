@@ -65,6 +65,7 @@ type LedgerForAPI interface {
 	LookupAccount(round basics.Round, addr basics.Address) (ledgercore.AccountData, basics.Round, basics.MicroAlgos, error)
 	LookupLatest(addr basics.Address) (basics.AccountData, basics.Round, basics.MicroAlgos, error)
 	LookupKv(round basics.Round, key string) (*string, error)
+	ListKvKeysByPrefix(rnd basics.Round, prefix string, maxResults uint64) ([]string, error)
 	ConsensusParams(r basics.Round) (config.ConsensusParams, error)
 	Latest() basics.Round
 	LookupAsset(rnd basics.Round, addr basics.Address, aidx basics.AssetIndex) (ledgercore.AssetResource, error)
@@ -1110,6 +1111,54 @@ func (v2 *Handlers) GetApplicationByID(ctx echo.Context, applicationID uint64) e
 	appParams := *record.AppParams
 	app := AppParamsToApplication(creator.String(), appIdx, &appParams)
 	response := generated.ApplicationResponse(app)
+	return ctx.JSON(http.StatusOK, response)
+}
+
+// GetApplicationBoxes returns the box names of an application
+// (GET /v2/applications/{application-id}/boxes)
+func (v2 *Handlers) GetApplicationBoxes(ctx echo.Context, applicationID uint64, params generated.GetApplicationBoxesParams) error {
+	appIdx := basics.AppIndex(applicationID)
+	ledger := v2.Node.LedgerForAPI()
+
+	lastRound := ledger.Latest()
+
+	// count total # of boxes, if max limit is set
+	maxResults := v2.Node.Config().MaxAPIBoxesPerApp
+	if maxResults != 0 {
+		appAddress := basics.AppIndex(appIdx).Address()
+		record, _, _, err := ledger.LookupAccount(lastRound, appAddress)
+		if err != nil {
+			return internalError(ctx, err, errFailedLookingUpLedger, v2.Log)
+		}
+		if record.TotalBoxes > maxResults {
+			v2.Log.Info("MaxAPIBoxesPerApp limit %d exceeded, total results %d", maxResults, record.TotalBoxes)
+			extraData := map[string]interface{}{
+				"max-results": maxResults,
+				"total-boxes": record.TotalBoxes,
+			}
+			return ctx.JSON(http.StatusBadRequest, generated.ErrorResponse{
+				Message: "Result limit exceeded",
+				Data:    &extraData,
+			})
+		}
+	}
+
+	value, err := ledger.ListKvKeysByPrefix(lastRound, logic.MakeBoxKey(appIdx, ""), maxResults)
+	if err != nil {
+		return internalError(ctx, err, errFailedLookingUpLedger, v2.Log)
+	}
+
+	if len(value) == 0 {
+		return notFound(ctx, errors.New(errBoxDoesNotExist), errBoxDoesNotExist, v2.Log)
+	}
+	boxes := make([]generated.BoxName, len(value))
+	for i, v := range value {
+		boxes[i] = generated.BoxName(v)
+	}
+
+	response := generated.BoxesResponse{
+		Boxes: boxes,
+	}
 	return ctx.JSON(http.StatusOK, response)
 }
 

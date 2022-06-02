@@ -45,6 +45,7 @@ type accountsDbQueries struct {
 	lookupResourcesStmt         *sql.Stmt
 	lookupAllResourcesStmt      *sql.Stmt
 	lookupKvPairStmt            *sql.Stmt
+	listKvKeysByPrefixStmt      *sql.Stmt
 	lookupCreatorStmt           *sql.Stmt
 	deleteStoredCatchpoint      *sql.Stmt
 	insertStoredCatchpoint      *sql.Stmt
@@ -1881,6 +1882,11 @@ func accountsInitDbQueries(r db.Queryable, w db.Queryable) (*accountsDbQueries, 
 		return nil, err
 	}
 
+	qs.listKvKeysByPrefixStmt, err = r.Prepare("SELECT rnd, key FROM acctrounds LEFT JOIN kvstore ON key LIKE ? + '%' WHERE id='acctbase' LIMIT ?;")
+	if err != nil {
+		return nil, err
+	}
+
 	qs.lookupCreatorStmt, err = r.Prepare("SELECT rnd, creator FROM acctrounds LEFT JOIN assetcreators ON asset = ? AND ctype = ? WHERE id='acctbase'")
 	if err != nil {
 		return nil, err
@@ -1984,6 +1990,36 @@ func (qs *accountsDbQueries) lookupKeyValue(key string) (pv persistedValue, err 
 			return nil
 		}
 		// we don't have that key, just return pv with the database round (pv.value==nil)
+		return nil
+	})
+	return
+}
+
+func (qs *accountsDbQueries) listKvKeysByPrefix(prefix string, maxResults uint64) (results []string, dbRound basics.Round, err error) {
+	err = db.Retry(func() error {
+		// Query for keys with prefix
+		rows, err := qs.listKvKeysByPrefixStmt.Query(prefix, maxResults)
+		if err != nil {
+			// this should never happen; it indicates that we don't have a current round in the acctrounds table.
+			if err == sql.ErrNoRows {
+				// Return the zero value of data
+				err = fmt.Errorf("unable to query value for prefix %v : %w", prefix, err)
+			}
+			return err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var k sql.NullString
+			err = rows.Scan(&dbRound, &k)
+			if err != nil {
+				return err
+			}
+
+			if k.Valid { // We got a non-null value, so it exists
+				results = append(results, k.String)
+			}
+		}
 		return nil
 	})
 	return

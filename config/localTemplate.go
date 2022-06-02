@@ -436,6 +436,10 @@ type Local struct {
 	// REST API responses before returning a 400 Bad Request. Set zero for no limit.
 	MaxAPIResourcesPerAccount uint64 `version[21]:"100000"`
 
+	// MaxAPIBoxesPerApp sets the maximum total number of boxes per app that will be allowed in
+	// GetApplicationBoxes REST API responses before returning a 400 Bad Request. Set zero for no limit.
+	MaxAPIBoxesPerApp uint64 `version[21]:"100000"`
+
 	// AgreementIncomingVotesQueueLength sets the size of the buffer holding incoming votes.
 	AgreementIncomingVotesQueueLength uint64 `version[21]:"10000"`
 

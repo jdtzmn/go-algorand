@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"io"
 	"sort"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -323,6 +324,10 @@ func (au *accountUpdates) LookupKv(rnd basics.Round, key string) (*string, error
 	return au.lookupKv(rnd, key, true /* take lock */)
 }
 
+func (au *accountUpdates) ListKvKeysByPrefix(rnd basics.Round, prefix string, maxResults uint64) ([]string, error) {
+	return au.listKvKeysByPrefix(rnd, prefix, maxResults, true /* take lock */)
+}
+
 func (au *accountUpdates) lookupKv(rnd basics.Round, key string, synchronized bool) (*string, error) {
 	needUnlock := false
 	if synchronized {
@@ -411,6 +416,124 @@ func (au *accountUpdates) lookupKv(rnd basics.Round, key string, synchronized bo
 			// in non-sync mode, we don't wait since we already assume that we're synchronized.
 			au.log.Errorf("accountUpdates.lookupKvPair: database round %d mismatching in-memory round %d", persistedData.round, currentDbRound)
 			return nil, &MismatchingDatabaseRoundError{databaseRound: persistedData.round, memoryRound: currentDbRound}
+		}
+
+	}
+}
+
+func filterKeysWithPrefix(stringMapAnyValType interface{}, prefix string) ([]string, bool, error) {
+	stringMap, ok := stringMapAnyValType.(map[string]interface{})
+	if !ok {
+		return nil, false, fmt.Errorf("filterKeysWithPrefix: expected map[string]interface{}, got %T", stringMapAnyValType)
+	}
+
+	found := false
+	var keys []string
+	for k := range stringMap {
+		if strings.HasPrefix(k, prefix) {
+			found = true
+			keys = append(keys, k)
+		}
+	}
+	return keys, found, nil
+}
+
+func (au *accountUpdates) listKvKeysByPrefix(rnd basics.Round, prefix string, maxResults uint64, synchronized bool) ([]string, error) {
+	needUnlock := false
+	if synchronized {
+		au.accountsMu.RLock()
+		needUnlock = true
+	}
+	defer func() {
+		if needUnlock {
+			au.accountsMu.RUnlock()
+		}
+	}()
+
+	// TODO: This loop and round handling is copied from other routines like
+	// lookupResource. I believe that it is overly cautious, as it always reruns
+	// the lookup if the DB round does not match the expected round. However, as
+	// long as the db round has not advanced too far (greater than `rnd`), I
+	// believe it would be valid to use. In the interest of minimizing changes,
+	// I'm not doing that now.
+
+	for {
+		currentDbRound := au.cachedDBRound
+		currentDeltaLen := len(au.deltas)
+		offset, err := au.roundOffset(rnd)
+		if err != nil {
+			return nil, err
+		}
+
+		// check if we have this key in `kvStore`, as that means the change we
+		// care about is in kvDeltas (and maybe just kvStore itself)
+		keys, indeltas, err := filterKeysWithPrefix(au.kvStore, prefix)
+		if err != nil {
+			return nil, err
+		}
+
+		if indeltas {
+			// Check if this is the most recent round, in which case, we can
+			// use a cache of the most recent kvStore state
+			if offset == uint64(len(au.kvDeltas)) {
+				return keys, nil
+			}
+
+			// the key is in the deltas, but we don't know if it appears in the
+			// delta range of [0..offset], so we'll need to check. Walk deltas
+			// backwards so later updates take priority.
+			for i := offset - 1; i > 0; i-- {
+				keys, ok, err := filterKeysWithPrefix(au.kvDeltas[i], prefix)
+				if err != nil {
+					return nil, err
+				}
+
+				if ok {
+					return keys, nil
+				}
+			}
+		} else {
+			// we know that the key in not in kvDeltas - so there is no point in scanning it.
+			// we've going to fall back to search in the database, but before doing so, we should
+			// update the rnd so that it would point to the end of the known delta range.
+			// ( that would give us the best validity range )
+			rnd = currentDbRound + basics.Round(currentDeltaLen)
+		}
+
+		// OTHER LOOKUPS USE "base" caches here.
+
+		if synchronized {
+			au.accountsMu.RUnlock()
+			needUnlock = false
+		}
+
+		// No updates of this account in kvDeltas; use on-disk DB.  The check in
+		// roundOffset() made sure the round is exactly the one present in the
+		// on-disk DB.
+
+		keys, dbRound, err := au.accountsq.listKvKeysByPrefix(prefix, maxResults)
+		if dbRound == currentDbRound {
+			return keys, nil
+		}
+
+		// The db round is unepxected...
+		if synchronized {
+			if dbRound < currentDbRound {
+				// Somehow the db is LOWER than it should be.
+				au.log.Errorf("accountUpdates.listKvKeysByPrefix: database round %d is behind in-memory round %d", dbRound, currentDbRound)
+				return nil, &StaleDatabaseRoundError{databaseRound: dbRound, memoryRound: currentDbRound}
+			}
+			// The db is higher, so a write must have happened.  Try again.
+			au.accountsMu.RLock()
+			needUnlock = true
+			// WHY BOTH - seems the goal is just to wait until the au is aware of progress. au.cachedDBRound should be enough?
+			for currentDbRound >= au.cachedDBRound && currentDeltaLen == len(au.deltas) {
+				au.accountsReadCond.Wait()
+			}
+		} else {
+			// in non-sync mode, we don't wait since we already assume that we're synchronized.
+			au.log.Errorf("accountUpdates.listKvKeysByPrefix: database round %d mismatching in-memory round %d", dbRound, currentDbRound)
+			return nil, &MismatchingDatabaseRoundError{databaseRound: dbRound, memoryRound: currentDbRound}
 		}
 
 	}
