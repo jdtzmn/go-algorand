@@ -201,6 +201,18 @@ func (ddr *dryrunDebugReceiver) Complete(state *logic.DebugState) error {
 	return ddr.Update(state)
 }
 
+func (ddr dryrunDebugReceiver) EnterInners(ep *logic.EvalParams) error {
+	return nil
+}
+
+func (ddr dryrunDebugReceiver) InnerTxn(groupIndex int, ep *logic.EvalParams) error {
+	return nil
+}
+
+func (ddr dryrunDebugReceiver) LeaveInners(ep *logic.EvalParams) error {
+	return nil
+}
+
 type dryrunLedger struct {
 	// inputs:
 

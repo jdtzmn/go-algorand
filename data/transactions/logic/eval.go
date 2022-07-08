@@ -389,6 +389,7 @@ func NewInnerEvalParams(txg []transactions.SignedTxnWithAD, caller *EvalContext)
 		created:                 caller.created,
 		appAddrCache:            caller.appAddrCache,
 		caller:                  caller,
+		Debugger:                caller.Debugger,
 	}
 	return ep
 }
@@ -4768,7 +4769,20 @@ func opItxnSubmit(cx *EvalContext) error {
 	}
 
 	ep := NewInnerEvalParams(cx.subtxns, cx)
+	if ep.Debugger != nil {
+		// TODO: make a "view" object so that the debugger cannot modify the EvalParams?
+		err := ep.Debugger.EnterInners(ep)
+		if err != nil {
+			return err
+		}
+	}
 	for i := range ep.TxnGroup {
+		if ep.Debugger != nil {
+			err := ep.Debugger.InnerTxn(i, ep)
+			if err != nil {
+				return err
+			}
+		}
 		err := cx.Ledger.Perform(i, ep)
 		if err != nil {
 			return err
@@ -4776,6 +4790,12 @@ func opItxnSubmit(cx *EvalContext) error {
 		// This is mostly a no-op, because Perform does its work "in-place", but
 		// RecordAD has some further responsibilities.
 		ep.RecordAD(i, ep.TxnGroup[i].ApplyData)
+	}
+	if ep.Debugger != nil {
+		err := ep.Debugger.LeaveInners(ep)
+		if err != nil {
+			return err
+		}
 	}
 	cx.txn.EvalDelta.InnerTxns = append(cx.txn.EvalDelta.InnerTxns, ep.TxnGroup...)
 	cx.subtxns = nil

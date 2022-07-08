@@ -617,3 +617,15 @@ func (d *Debugger) Complete(state *logic.DebugState) error {
 
 	return nil
 }
+
+func (d *Debugger) EnterInners(ep *logic.EvalParams) error {
+	return nil
+}
+
+func (d *Debugger) InnerTxn(groupIndex int, ep *logic.EvalParams) error {
+	return nil
+}
+
+func (d *Debugger) LeaveInners(ep *logic.EvalParams) error {
+	return nil
+}
