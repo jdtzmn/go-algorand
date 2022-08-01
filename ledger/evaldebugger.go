@@ -23,6 +23,7 @@ import (
 	"github.com/algorand/go-algorand/data/basics"
 	"github.com/algorand/go-algorand/data/bookkeeping"
 	"github.com/algorand/go-algorand/data/transactions"
+	"github.com/algorand/go-algorand/data/transactions/logic"
 	"github.com/algorand/go-algorand/ledger/internal"
 	"github.com/algorand/go-algorand/ledger/ledgercore"
 )
@@ -34,7 +35,7 @@ type DebuggerLedgerForEval interface {
 }
 
 // EvalForDebugger processes a transaction group for the debugger.
-func EvalForDebugger(l DebuggerLedgerForEval, stxns []transactions.SignedTxn) (ledgercore.StateDelta, []transactions.SignedTxnInBlock, error) {
+func EvalForDebugger(l DebuggerLedgerForEval, stxns []transactions.SignedTxn, debugger logic.DebuggerHook) (ledgercore.StateDelta, []transactions.SignedTxnInBlock, error) {
 	prevBlockHdr, err := l.BlockHdr(l.Latest())
 	if err != nil {
 		return ledgercore.StateDelta{}, []transactions.SignedTxnInBlock{}, err
@@ -62,5 +63,5 @@ func EvalForDebugger(l DebuggerLedgerForEval, stxns []transactions.SignedTxn) (l
 		}
 	}
 
-	return eval.ProcessTransactionGroupForDebugger(group)
+	return eval.ProcessTransactionGroupForDebugger(group, debugger)
 }

@@ -26,6 +26,7 @@ import (
 	"github.com/algorand/go-algorand/data/basics"
 	"github.com/algorand/go-algorand/data/bookkeeping"
 	"github.com/algorand/go-algorand/data/transactions"
+	"github.com/algorand/go-algorand/data/transactions/logic"
 	"github.com/algorand/go-algorand/data/transactions/verify"
 	"github.com/algorand/go-algorand/ledger"
 )
@@ -144,6 +145,16 @@ func isInvalidSignatureError(err error) bool {
 }
 
 // ==============================
+// > Simulator Debugger Hook
+// ==============================
+
+type debuggerHook struct{}
+
+func makeDebuggerHook() logic.DebuggerHook {
+	return debuggerHook{}
+}
+
+// ==============================
 // > Simulator
 // ==============================
 
@@ -204,7 +215,8 @@ func (s Simulator) SimulateSignedTxGroup(txgroup []transactions.SignedTxn) (gene
 		}
 	}
 
-	_, _, evalErr := ledger.EvalForDebugger(s.ledger, txgroup)
+	simulatorDebugger := makeDebuggerHook()
+	_, _, evalErr := ledger.EvalForDebugger(s.ledger, txgroup, simulatorDebugger)
 	if evalErr != nil {
 		errStr := evalErr.Error()
 		result.FailureMessage = &errStr

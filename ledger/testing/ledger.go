@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with go-algorand.  If not, see <https://www.gnu.org/licenses/>.
 
-package logic
+package testing
 
 import (
 	"errors"
@@ -26,6 +26,7 @@ import (
 	"github.com/algorand/go-algorand/data/bookkeeping"
 	"github.com/algorand/go-algorand/data/committee"
 	"github.com/algorand/go-algorand/data/transactions"
+	"github.com/algorand/go-algorand/data/transactions/logic"
 	"github.com/algorand/go-algorand/ledger/ledgercore"
 	"github.com/algorand/go-algorand/protocol"
 )
@@ -81,6 +82,12 @@ func MakeLedger(balances map[basics.Address]uint64) *Ledger {
 	l.applications = make(map[basics.AppIndex]appParams)
 	l.assets = make(map[basics.AssetIndex]asaParams)
 	l.mods = make(map[basics.AppIndex]map[string]basics.ValueDelta)
+	return l
+}
+
+func MakeLedgerForRound(balances map[basics.Address]uint64, rnd uint64) *Ledger {
+	l := MakeLedger(balances)
+	l.rnd = basics.Round(rnd)
 	return l
 }
 
@@ -456,7 +463,7 @@ func (l *Ledger) AssetHolding(addr basics.Address, assetID basics.AssetIndex) (b
 		if asset, ok := br.holdings[assetID]; ok {
 			return asset, nil
 		}
-		return basics.AssetHolding{}, fmt.Errorf("No asset for account")
+		return basics.AssetHolding{}, fmt.Errorf("no asset for account")
 	}
 	return basics.AssetHolding{}, fmt.Errorf("no such address")
 }
@@ -558,12 +565,12 @@ func (l *Ledger) axfer(from basics.Address, xfer transactions.AssetTransferTxnFi
 				}
 				return nil
 			}
-			return fmt.Errorf("Asset (%d) does not exist", aid)
+			return fmt.Errorf("asset (%d) does not exist", aid)
 		}
-		return fmt.Errorf("Sender (%s) not opted in to %d", from, aid)
+		return fmt.Errorf("sender (%s) not opted in to %d", from, aid)
 	}
 	if fholding.Frozen {
-		return fmt.Errorf("Sender (%s) is frozen for %d", from, aid)
+		return fmt.Errorf("sender (%s) is frozen for %d", from, aid)
 	}
 	tbr, ok := l.balances[to]
 	if !ok {
@@ -635,10 +642,10 @@ func (l *Ledger) afrz(from basics.Address, frz transactions.AssetFreezeTxnFields
 	aid := frz.FreezeAsset
 	params, ok := l.assets[aid]
 	if !ok {
-		return fmt.Errorf("Asset (%d) does not exist", aid)
+		return fmt.Errorf("asset (%d) does not exist", aid)
 	}
 	if params.Freeze != from {
-		return fmt.Errorf("Asset (%d) can not be frozen by %s", aid, from)
+		return fmt.Errorf("asset (%d) can not be frozen by %s", aid, from)
 	}
 	br, ok := l.balances[frz.FreezeAccount]
 	if !ok {
@@ -653,7 +660,7 @@ func (l *Ledger) afrz(from basics.Address, frz transactions.AssetFreezeTxnFields
 	return nil
 }
 
-func (l *Ledger) appl(from basics.Address, appl transactions.ApplicationCallTxnFields, ad *transactions.ApplyData, gi int, ep *EvalParams) error {
+func (l *Ledger) appl(from basics.Address, appl transactions.ApplicationCallTxnFields, ad *transactions.ApplyData, gi int, ep *logic.EvalParams) error {
 	aid := appl.ApplicationID
 	if aid == 0 {
 		aid = basics.AppIndex(l.Counter())
@@ -692,16 +699,16 @@ func (l *Ledger) appl(from basics.Address, appl transactions.ApplicationCallTxnF
 	// Execute the Approval program
 	params, ok := l.applications[aid]
 	if !ok {
-		return errors.New("No application")
+		return errors.New("no application")
 	}
-	pass, cx, err := EvalContract(params.ApprovalProgram, gi, aid, ep)
+	pass, cx, err := logic.EvalContract(params.ApprovalProgram, gi, aid, ep)
 	if err != nil {
 		return err
 	}
 	if !pass {
-		return errors.New("Approval program failed")
+		return errors.New("approval program failed")
 	}
-	ad.EvalDelta = cx.txn.EvalDelta
+	ad.EvalDelta = cx.TxnGroup[gi].EvalDelta
 
 	switch appl.OnCompletion {
 	case transactions.NoOpOC:
@@ -738,7 +745,7 @@ func (l *Ledger) appl(from basics.Address, appl transactions.ApplicationCallTxnF
 }
 
 // Perform causes txn to "occur" against the ledger.
-func (l *Ledger) Perform(gi int, ep *EvalParams) error {
+func (l *Ledger) Perform(gi int, ep *logic.EvalParams) error {
 	txn := &ep.TxnGroup[gi]
 	err := l.move(txn.Txn.Sender, ep.Specials.FeeSink, txn.Txn.Fee.Raw)
 	if err != nil {
@@ -828,4 +835,50 @@ func (l *Ledger) round() basics.Round {
 		l.rnd = basics.Round(uint64(math.MaxUint32) + 5)
 	}
 	return l.rnd
+}
+
+func (l *Ledger) LookupApplication(rnd basics.Round, addr basics.Address, aidx basics.AppIndex) (ledgercore.AppResource, error) {
+	appParams, ok := l.applications[aidx]
+	if !ok {
+		return ledgercore.AppResource{}, nil
+	}
+	basicAppParams := basics.AppParams{
+		ApprovalProgram:   appParams.ApprovalProgram,
+		ClearStateProgram: appParams.ClearStateProgram,
+		GlobalState:       appParams.GlobalState,
+		StateSchemas:      appParams.StateSchemas,
+		ExtraProgramPages: appParams.ExtraProgramPages,
+	}
+
+	addrBalance, ok := l.balances[addr]
+	if !ok {
+		return ledgercore.AppResource{}, fmt.Errorf("could not find balance for address: %s", addr.String())
+	}
+
+	appLocalState, ok := addrBalance.locals[aidx]
+	if !ok {
+		return ledgercore.AppResource{}, fmt.Errorf("could not find local state for address: %s, app: %d", addr.String(), aidx)
+	}
+
+	basicAppLocalState := basics.AppLocalState{
+		Schema:   appParams.LocalStateSchema,
+		KeyValue: appLocalState,
+	}
+
+	return ledgercore.AppResource{AppLocalState: &basicAppLocalState, AppParams: &basicAppParams}, nil
+}
+
+func (l *Ledger) LatestTotals() (basics.Round, ledgercore.AccountTotals, error) {
+	sum := uint64(0)
+	for _, b := range l.balances {
+		sum += b.balance
+	}
+
+	rewardUnits := uint64(1000) // to prevent overflow errors
+
+	at := ledgercore.AccountTotals{
+		Offline: ledgercore.AlgoCount{Money: basics.MicroAlgos{Raw: sum}, RewardUnits: rewardUnits},
+	}
+
+	return l.Round(), at, nil
 }

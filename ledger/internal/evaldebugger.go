@@ -20,12 +20,13 @@ import (
 	"fmt"
 
 	"github.com/algorand/go-algorand/data/transactions"
+	"github.com/algorand/go-algorand/data/transactions/logic"
 	"github.com/algorand/go-algorand/ledger/ledgercore"
 )
 
 // ProcessTransactionGroupForDebugger ..
-func (eval *BlockEvaluator) ProcessTransactionGroupForDebugger(group []transactions.SignedTxnWithAD) (ledgercore.StateDelta, []transactions.SignedTxnInBlock, error) {
-	err := eval.TransactionGroup(group)
+func (eval *BlockEvaluator) ProcessTransactionGroupForDebugger(group []transactions.SignedTxnWithAD, debugger logic.DebuggerHook) (ledgercore.StateDelta, []transactions.SignedTxnInBlock, error) {
+	err := eval.transactionGroup(group, debugger)
 	if err != nil {
 		return ledgercore.StateDelta{}, []transactions.SignedTxnInBlock{},
 			fmt.Errorf("ProcessTransactionGroupForDebugger() err: %w", err)
