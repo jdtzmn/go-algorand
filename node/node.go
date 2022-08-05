@@ -50,6 +50,7 @@ import (
 	"github.com/algorand/go-algorand/node/indexer"
 	"github.com/algorand/go-algorand/protocol"
 	"github.com/algorand/go-algorand/rpcs"
+	"github.com/algorand/go-algorand/simulation"
 	"github.com/algorand/go-algorand/util/db"
 	"github.com/algorand/go-algorand/util/execpool"
 	"github.com/algorand/go-algorand/util/metrics"
@@ -807,6 +808,13 @@ func (node *AlgorandFullNode) AppendParticipationKeys(partKeyID account.Particip
 	}
 
 	return node.accountManager.Registry().Flush(participationRegistryFlushMaxWaitDuration)
+}
+
+// Simulate is cool
+func (node *AlgorandFullNode) Simulate(txgroup []transactions.SignedTxn) error {
+	// Simulate transaction
+	simulator := simulation.NewLedger(node.ledger)
+	return simulator.SimulateSignedTxGroup(txgroup)
 }
 
 func createTemporaryParticipationKey(outDir string, partKeyBinary []byte) (string, error) {

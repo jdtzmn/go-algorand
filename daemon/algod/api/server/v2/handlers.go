@@ -72,7 +72,6 @@ type LedgerForAPI interface {
 	BlockCert(rnd basics.Round) (blk bookkeeping.Block, cert agreement.Certificate, err error)
 	GenesisHash() crypto.Digest
 	GenesisProto() config.ConsensusParams
-	BlockHdrCached(rnd basics.Round) (bookkeeping.BlockHeader, error)
 	LatestTotals() (basics.Round, ledgercore.AccountTotals, error)
 	BlockHdr(rnd basics.Round) (blk bookkeeping.BlockHeader, err error)
 	Wait(r basics.Round) chan struct{}
@@ -101,6 +100,7 @@ type NodeInterface interface {
 	GetParticipationKey(account.ParticipationID) (account.ParticipationRecord, error)
 	RemoveParticipationKey(account.ParticipationID) error
 	AppendParticipationKeys(id account.ParticipationID, keys account.StateProofKeys) error
+	Simulate([]transactions.SignedTxn) error
 }
 
 func roundToPtrOrNil(value basics.Round) *uint64 {
@@ -823,22 +823,11 @@ func (v2 *Handlers) SimulateTransaction(ctx echo.Context) error {
 		return badRequest(ctx, err, err.Error(), v2.Log)
 	}
 
-	actualLedger := v2.Node.LedgerForAPI()
+	var result generated.SimulationResult
 
-	// Simulate transaction
-	simulator := MakeSimulator(actualLedger)
-	result, err := simulator.SimulateSignedTxGroup(txgroup)
+	err = v2.Node.Simulate(txgroup)
 	if err != nil {
-		var invalidTxErr *InvalidTxGroupError
-		var scopedErr *ScopedSimulatorError
-		switch {
-		case errors.As(err, &invalidTxErr):
-			return badRequest(ctx, invalidTxErr, invalidTxErr.Error(), v2.Log)
-		case errors.As(err, &scopedErr):
-			return internalError(ctx, scopedErr, scopedErr.External, v2.Log)
-		default:
-			return internalError(ctx, err, err.Error(), v2.Log)
-		}
+		return internalError(ctx, err, err.Error(), v2.Log)
 	}
 
 	res := generated.SimulationResponse(result)
