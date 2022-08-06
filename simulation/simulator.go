@@ -44,6 +44,14 @@ func (sl Ledger) Latest() basics.Round {
 	return sl.start
 }
 
+// LookupLatest would implicitly use the latest round in the _underlying_
+// Ledger, it would give wrong results if that ledger has moved forward. But it
+// should never be called, as the REST API is the only code using this function,
+// and the REST API will never get its grubby paws on a SimulationLedger.
+func (l *Ledger) LookupLatest(addr basics.Address) (basics.AccountData, basics.Round, basics.MicroAlgos, error) {
+	panic("unexpected call to LookupLatest")
+}
+
 // checkWellFormed checks that the transaction is well-formed.
 func (sl Ledger) checkWellFormed(txgroup []transactions.SignedTxn) error {
 	hdr, err := sl.BlockHdr(sl.start)
