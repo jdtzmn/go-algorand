@@ -38,6 +38,12 @@ func NewLedger(underlying *data.Ledger) Ledger {
 	return Ledger{underlying.Latest(), underlying}
 }
 
+// Latest returns the "locked in" start, regardless of whether the underlying
+// Ledger has moved on.
+func (sl Ledger) Latest() basics.Round {
+	return sl.start
+}
+
 // checkWellFormed checks that the transaction is well-formed.
 func (sl Ledger) checkWellFormed(txgroup []transactions.SignedTxn) error {
 	hdr, err := sl.BlockHdr(sl.start)
@@ -61,6 +67,8 @@ func (sl Ledger) evaluate(stxns []transactions.SignedTxn) (ledgercore.StateDelta
 	}
 	nextBlock := bookkeeping.MakeBlock(prevBlockHdr)
 
+	// sl has 'StartEvaluator' because *data.Ledger is embedded (and that, in
+	// turn, embeds *ledger.Ledger)
 	eval, err := sl.StartEvaluator(nextBlock.BlockHeader, 0, 0)
 	if err != nil {
 		return ledgercore.StateDelta{}, []transactions.SignedTxnInBlock{}, err
