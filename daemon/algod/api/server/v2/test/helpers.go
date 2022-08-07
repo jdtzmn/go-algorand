@@ -112,6 +112,10 @@ func (m *mockNode) AppendParticipationKeys(id account.ParticipationID, keys acco
 	return m.err
 }
 
+func (m *mockNode) Simulate(txgroup []transactions.SignedTxn) (*ledgercore.ValidatedBlock, error) {
+	return nil, fmt.Errorf("unimplemented")
+}
+
 func makeMockNode(ledger v2.LedgerForAPI, genesisID string, nodeError error) *mockNode {
 	return &mockNode{
 		ledger:    ledger,

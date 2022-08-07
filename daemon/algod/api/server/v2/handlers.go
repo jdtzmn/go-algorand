@@ -100,7 +100,7 @@ type NodeInterface interface {
 	GetParticipationKey(account.ParticipationID) (account.ParticipationRecord, error)
 	RemoveParticipationKey(account.ParticipationID) error
 	AppendParticipationKeys(id account.ParticipationID, keys account.StateProofKeys) error
-	Simulate([]transactions.SignedTxn) error
+	Simulate([]transactions.SignedTxn) (*ledgercore.ValidatedBlock, error)
 }
 
 func roundToPtrOrNil(value basics.Round) *uint64 {
@@ -761,8 +761,7 @@ func decodeTxGroup(body io.Reader, maxTxGroupSize int) ([]transactions.SignedTxn
 		txgroup = append(txgroup, st)
 
 		if len(txgroup) > maxTxGroupSize {
-			err := fmt.Errorf("max group size is %d", maxTxGroupSize)
-			return nil, err
+			return nil, fmt.Errorf("max group size is %d", maxTxGroupSize)
 		}
 	}
 
@@ -823,11 +822,21 @@ func (v2 *Handlers) SimulateTransaction(ctx echo.Context) error {
 		return badRequest(ctx, err, err.Error(), v2.Log)
 	}
 
-	var result generated.SimulationResult
-
-	err = v2.Node.Simulate(txgroup)
+	vb, err := v2.Node.Simulate(txgroup)
 	if err != nil {
 		return internalError(ctx, err, err.Error(), v2.Log)
+	}
+
+	// Use vb to fill in SimulateResult. I presume that's going to be widened to
+	// contain info that you can dig out of the Payset. We will also need some
+	// place for evaluation to stuff "out of band" information, like the Trace
+	// objects that we will run AVM evaluation with.  I imagine Simulate() will
+	// return them along with the vb.
+	dumb := fmt.Sprintf("%+v", vb.Block().Payset)
+	// SimulationResults needs adjustment, but I'm having trouble with
+	// oapi-codegen install right now.
+	var result generated.SimulationResult = generated.SimulationResult{
+		FailureMessage: &dumb,
 	}
 
 	res := generated.SimulationResponse(result)

@@ -19,7 +19,6 @@ package simulation
 import (
 	"errors"
 
-	"github.com/algorand/go-algorand/daemon/algod/api/server/v2/generated"
 	"github.com/algorand/go-algorand/data"
 	"github.com/algorand/go-algorand/data/basics"
 	"github.com/algorand/go-algorand/data/bookkeeping"
@@ -52,26 +51,27 @@ func (l *Ledger) LookupLatest(addr basics.Address) (basics.AccountData, basics.R
 	panic("unexpected call to LookupLatest")
 }
 
-// checkWellFormed checks that the transaction is well-formed.
-func (sl Ledger) checkWellFormed(txgroup []transactions.SignedTxn) error {
+// check checks signatures (if present) and well-formedness
+func (sl Ledger) check(txgroup []transactions.SignedTxn) error {
 	hdr, err := sl.BlockHdr(sl.start)
 	if err != nil {
 		return err
 	}
 
 	_, err = verify.TxnGroup(txgroup, hdr, nil)
-	if err != nil {
+	if err != nil && !errors.Is(err, verify.MissingSignatureError) {
 		return err
 	}
 
 	return nil
 }
 
-// evaluate creates a new block with txgroup given, and returns all the details
-func (sl Ledger) evaluate(stxns []transactions.SignedTxn) (ledgercore.StateDelta, []transactions.SignedTxnInBlock, error) {
+// evaluate simulates a transaction group as if it were the only transaction
+// added as a block to the current blockchain.
+func (sl Ledger) evaluate(stxns []transactions.SignedTxn) (*ledgercore.ValidatedBlock, error) {
 	prevBlockHdr, err := sl.BlockHdr(sl.start)
 	if err != nil {
-		return ledgercore.StateDelta{}, []transactions.SignedTxnInBlock{}, err
+		return nil, err
 	}
 	nextBlock := bookkeeping.MakeBlock(prevBlockHdr)
 
@@ -79,42 +79,32 @@ func (sl Ledger) evaluate(stxns []transactions.SignedTxn) (ledgercore.StateDelta
 	// turn, embeds *ledger.Ledger)
 	eval, err := sl.StartEvaluator(nextBlock.BlockHeader, 0, 0)
 	if err != nil {
-		return ledgercore.StateDelta{}, []transactions.SignedTxnInBlock{}, err
+		return nil, err
 	}
 
 	group := transactions.WrapSignedTxnsWithAD(stxns)
 
 	err = eval.TransactionGroup(group)
 	if err != nil {
-		return ledgercore.StateDelta{}, []transactions.SignedTxnInBlock{}, err
+		return nil, err
 	}
 
 	// Finally, process any pending end-of-block state changes.
 	vb, err := eval.GenerateBlock()
 	if err != nil {
-		return ledgercore.StateDelta{}, []transactions.SignedTxnInBlock{}, err
+		return nil, err
 	}
 
-	return vb.Delta(), vb.Block().Payset, nil
+	return vb, nil
 }
 
 // Simulate simulates a transaction group using the simulator.
-func (sl Ledger) Simulate(txgroup []transactions.SignedTxn) (generated.SimulationResult, error) {
-	var result generated.SimulationResult
-
-	// check that the transaction is well-formed. Signatures are checked after evaluation
-	err := sl.checkWellFormed(txgroup)
+func (sl Ledger) Simulate(txgroup []transactions.SignedTxn) (*ledgercore.ValidatedBlock, error) {
+	// check that the transaction is well-formed. Missing signatures are ignored.
+	err := sl.check(txgroup)
 	if err != nil {
-		if errors.Is(err, errors.New("signature missing")) { // ahh! not right!
-			// note the error for reporting later
-			msg := err.Error()
-			result.SignatureFailureMessage = &msg
-		} else {
-			return result, err
-		}
+		return nil, err
 	}
 
-	sl.evaluate(txgroup)
-
-	return result, nil
+	return sl.evaluate(txgroup)
 }

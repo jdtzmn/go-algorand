@@ -810,12 +810,12 @@ func (node *AlgorandFullNode) AppendParticipationKeys(partKeyID account.Particip
 	return node.accountManager.Registry().Flush(participationRegistryFlushMaxWaitDuration)
 }
 
-// Simulate is cool
-func (node *AlgorandFullNode) Simulate(txgroup []transactions.SignedTxn) error {
+// Simulate speculatively runs a transaction group against the current
+// blockchain state and returns the effects and/or errors that would result.
+func (node *AlgorandFullNode) Simulate(txgroup []transactions.SignedTxn) (*ledgercore.ValidatedBlock, error) {
 	// Simulate transaction
 	simulator := simulation.NewLedger(node.ledger)
-	_, err := simulator.Simulate(txgroup)
-	return err
+	return simulator.Simulate(txgroup)
 }
 
 func createTemporaryParticipationKey(outDir string, partKeyBinary []byte) (string, error) {
