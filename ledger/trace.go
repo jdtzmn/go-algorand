@@ -77,8 +77,8 @@ type OptedInAppMutations struct {
 }
 
 type EvalContextEffects struct {
-	Stack   map[uint8]Mutation
-	Scratch map[string]Mutation
+	Stack   map[uint]Mutation
+	Scratch map[uint8]Mutation
 }
 
 type Effects struct {
@@ -143,14 +143,14 @@ type TxnResult struct {
 	FailureMessage   string // Question: is this still needed if we have the trace?
 }
 
-type TxnGroup struct {
+type TxnGroupResult struct {
 	Trace      Trace
 	TxnResults []TxnResult
 }
 
 type SimulationResult struct {
 	Version           uint64
-	TxnGroups         []TxnGroup // txngroups is a list so that supporting multiple in the future is not breaking
+	TxnGroups         []TxnGroupResult // txngroups is a list so that supporting multiple in the future is not breaking
 	MissingSignatures bool
 	FailureMessage    string
 	InitialState      InitialState
