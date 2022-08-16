@@ -108,50 +108,49 @@ const (
 type TraceElement struct {
 	// common fields
 	Type    TraceElementType
-	Events  []TraceElement
 	Effects *Effects
-
-	// txn only
-
-	// This is a "transaction path": e.g. [0, 0, 1] means the second inner txn of the first inner txn of the first txn.
-	// You can use this transaction path to find the txn data in the `TxnResults` list.
-	GroupIndex *[]uint64
-
-	// opcode only
-	OpCodeWithArgs string
-	PC             uint64
 }
 
-type Trace = []TraceElement
+type OpCodeTraceElement struct {
+	TraceElement
+	OpCodeWithArgs string
+	PC             uint64
+	InnerIndex     uint64
+}
 
-// ==============================
-// > Initial State
-// ==============================
-
-type InitialState struct {
-	Effects
-	TxGroup []transactions.SignedTxn // raw txn group submitted
+type TxnTraceElement struct {
+	TraceElement
+	Txn       transactions.SignedTxnWithAD // ApplyData.EvalDelta.InnerTxns is not populated, in favor of InnerTxns below
+	InnerTxns []TxnTraceElement
+	LogicSig  []OpCodeTraceElement // included iff trace is requested
+	Trace     []OpCodeTraceElement // included iff trace is requested
 }
 
 // ==============================
 // > Transaction Results
 // ==============================
 
-type TxnResult struct {
-	ApplyData        transactions.ApplyData
-	MissingSignature bool
-	FailureMessage   string // Question: is this still needed if we have the trace?
+type FailureLocator struct {
+	In string // InnerTxns, LogicSig, or Trace
+	At uint64 // index into InnerTxns, LogicSig, or Trace
 }
 
-type TxnGroupResult struct {
-	Trace      Trace
-	TxnResults []TxnResult
+type TxnResult struct {
+	TxnTraceElement
+	MissingSignature bool
+	FailureMessage   string
+
+	// If FailureMessage is not-empty:
+	// - if FailedAt is empty, then this transaction failed
+	// - if FailedAt is not empty, then this transaction failed at the given location
+	//
+	// FailedAt is used to avoid repeating the FailureMessage multiple times down the tree.
+	FailedAt []FailureLocator
 }
 
 type SimulationResult struct {
-	Version           uint64
-	TxnGroups         []TxnGroupResult // txngroups is a list so that supporting multiple in the future is not breaking
-	MissingSignatures bool
-	FailureMessage    string
-	InitialState      InitialState
+	Version      uint64
+	TxnGroups    [][]TxnResult // txngroups is a list so that supporting multiple in the future is not breaking
+	WouldSucceed bool          // false iff failure message or missing sig or budget exceeded
+	InitialState Effects
 }
