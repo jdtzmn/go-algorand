@@ -25,6 +25,33 @@ import (
 type TxnPath = []uint64
 
 // ==============================
+// > Trace
+// ==============================
+
+type TraceElementType uint64
+
+const (
+	Txn TraceElementType = iota
+	OpCode
+)
+
+type TraceElement struct {
+	// common fields
+	Type   TraceElementType
+	Events []TraceElement
+
+	// txn only fields
+	TxnPointer TxnPath
+
+	// opcode only fields
+	OpCodeWithArgs string
+	PC             uint64
+}
+
+// Trace contains a list of transactions or opcodes
+type Trace = []TraceElement
+
+// ==============================
 // > Transaction Results
 // ==============================
 
@@ -34,6 +61,7 @@ type TxnResult struct {
 }
 
 type TxnGroupResult struct {
+	Trace          Trace
 	Txns           []TxnResult
 	FailureMessage string
 
