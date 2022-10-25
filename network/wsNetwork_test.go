@@ -335,7 +335,9 @@ func TestWebsocketProposalPayloadCompression(t *testing.T) {
 	}
 
 	for _, test := range tests {
+		test := test
 		t.Run(fmt.Sprintf("A_%s(%s)+B_%s(%s)", test.netASupProto, test.netAProto, test.netBSupProto, test.netBProto), func(t *testing.T) {
+			t.Parallel()
 			netA := makeTestWebsocketNode(t)
 			netA.config.GossipFanout = 1
 			netA.protocolVersion = test.netAProto

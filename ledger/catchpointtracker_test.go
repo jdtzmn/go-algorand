@@ -797,7 +797,9 @@ func TestCalculateFirstStageRounds(t *testing.T) {
 	}
 
 	for i, testCase := range testCases {
+		testCase := testCase
 		t.Run(fmt.Sprintf("test_case_%d", i), func(t *testing.T) {
+			t.Parallel()
 			hasIntermediateFirstStageRound, hasMultipleIntermediateFirstStageRounds, offset :=
 				calculateFirstStageRounds(
 					testCase.oldBase, testCase.offset, testCase.accountDataResourceSeparationRound,
@@ -836,7 +838,9 @@ func TestCalculateCatchpointRounds(t *testing.T) {
 	}
 
 	for i, testCase := range testCases {
+		testCase := testCase
 		t.Run(fmt.Sprintf("test_case_%d", i), func(t *testing.T) {
+			t.Parallel()
 			rounds := calculateCatchpointRounds(
 				testCase.min, testCase.max, testCase.catchpointInterval)
 			require.Equal(t, testCase.output, rounds)

@@ -4961,7 +4961,9 @@ func TestPcDetails(t *testing.T) {
 		{"b end; end:", 4, ""},
 	}
 	for i, test := range tests {
+		test := test
 		t.Run(fmt.Sprintf("i=%d", i), func(t *testing.T) {
+			t.Parallel()
 			ops := testProg(t, test.source, LogicVersion)
 			ep, _, _ := makeSampleEnv()
 

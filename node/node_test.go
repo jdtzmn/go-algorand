@@ -526,7 +526,9 @@ func TestOfflineOnlineClosedBitStatus(t *testing.T) {
 			MicroAlgosWithRewards: basics.MicroAlgos{Raw: 0}}, 0 | bitAccountOffline | bitAccountIsClosed},
 	}
 	for _, test := range tests {
+		test := test
 		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
 			require.Equal(t, test.expectedInt, getOfflineClosedStatus(test.acctData))
 		})
 	}

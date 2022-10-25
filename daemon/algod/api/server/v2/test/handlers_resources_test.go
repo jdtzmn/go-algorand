@@ -364,7 +364,9 @@ func TestAccountInformationResourceLimits(t *testing.T) {
 		{name: "assetparams", accountMaker: randomAccountWithAssetParams},
 		{name: "appparams", accountMaker: randomAccountWithAppParams},
 	} {
+		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			accountInformationResourceLimitsTest(t, tc.accountMaker, 99, 100, "", 200)      // under limit
 			accountInformationResourceLimitsTest(t, tc.accountMaker, 101, 100, "", 400)     // over limit
 			accountInformationResourceLimitsTest(t, tc.accountMaker, 100, 100, "", 200)     // at limit

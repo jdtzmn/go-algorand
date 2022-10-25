@@ -1125,7 +1125,9 @@ int 1
 	}
 
 	for _, test := range tests {
+		test := test
 		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
 
 			proto := config.Consensus[protocol.ConsensusCurrentVersion]
 			genesisInitState, initKeys := ledgertesting.GenerateInitState(t, protocol.ConsensusCurrentVersion, 100)

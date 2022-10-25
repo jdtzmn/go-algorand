@@ -318,7 +318,9 @@ func TestCatchpointLabelGeneration(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(fmt.Sprintf("CatchpointInterval_%v/Archival_%v", tc.catchpointInterval, tc.archival), func(t *testing.T) {
+			t.Parallel()
 			a := require.New(fixtures.SynchronizedTest(t))
 			log := logging.TestingLog(t)
 

@@ -439,7 +439,9 @@ func TestAcctOnlineCache(t *testing.T) {
 	}()
 
 	for _, val := range []uint64{4, 8} {
+		val := val
 		t.Run(fmt.Sprintf("lookback=%d", val), func(t *testing.T) {
+			t.Parallel()
 			allAccts := make([]basics.BalanceRecord, numAccts)
 			genesisAccts := []map[basics.Address]basics.AccountData{{}}
 			genesisAccts[0] = make(map[basics.Address]basics.AccountData, numAccts+1)

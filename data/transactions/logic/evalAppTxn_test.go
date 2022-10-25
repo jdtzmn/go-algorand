@@ -990,7 +990,9 @@ func TestBigApplCreation(t *testing.T) {
 
 	// First, test normal accummulation
 	for _, pgm := range []string{"Approval", "ClearState"} {
+		pgm := pgm
 		t.Run(pgm, func(t *testing.T) {
+			t.Parallel()
 			basic := "itxn_field " + pgm + "Program"
 			pages := "itxn_field " + pgm + "ProgramPages"
 			TestApp(t, p+`int 1000; bzero; `+pages+`
@@ -1785,10 +1787,8 @@ itxn_submit
 int 1
 `
 
-	for _, unified := range []bool{true, false} {
+	for _, unified := range []bool{true, false} { //nolint:paralleltest // NO t.Parallel(). unified variable is actually shared
 		t.Run(fmt.Sprintf("unified=%t", unified), func(t *testing.T) {
-			// t.Parallel() NO! unified variable is actually shared
-
 			ep, parentTx, ledger := MakeSampleEnv()
 			ep.Proto.UnifyInnerTxIDs = unified
 
@@ -2107,6 +2107,7 @@ int 1
 `
 
 	for _, unified := range []bool{true, false} {
+		unified := unified
 		t.Parallel()
 		t.Run(fmt.Sprintf("unified=%t", unified), func(t *testing.T) {
 			t.Parallel()
@@ -2238,9 +2239,8 @@ func TestInnerTxIDCaching(t *testing.T) {
 	parentAppID := basics.AppIndex(888)
 	childAppID := basics.AppIndex(222)
 
-	for _, unified := range []bool{true, false} {
+	for _, unified := range []bool{true, false} { //nolint:paralleltest // NO t.Parallel(). unified variable is actually shared
 		t.Run(fmt.Sprintf("unified=%t", unified), func(t *testing.T) {
-			// t.Parallel() NO! unified variable is actually shared
 
 			ep, parentTx, ledger := MakeSampleEnv()
 			ep.Proto.UnifyInnerTxIDs = unified

@@ -117,7 +117,9 @@ func TestTagCounterFiltering(t *testing.T) {
 		"networkMessageSentByTag":     networkMessageSentByTag,
 	}
 	for name, tag := range tagCounterTags {
+		tag := tag
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			require.NotZero(t, len(tag.AllowedTags))
 			tag.Add("TEST_TAG", 1)
 			b := strings.Builder{}
@@ -177,7 +179,9 @@ func TestVersionToFeature(t *testing.T) {
 		{"2.3", PeerFeatureProposalCompression, pfCompressedProposal},
 	}
 	for i, test := range tests {
+		test := test
 		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			t.Parallel()
 			f := decodePeerFeatures(test.ver, test.hdr)
 			require.Equal(t, test.expected, f)
 		})

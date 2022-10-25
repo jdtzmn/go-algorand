@@ -396,6 +396,7 @@ func TestAccountDBInMemoryAcct(t *testing.T) {
 	}
 
 	for i, test := range tests {
+		test := test
 
 		dbs, _ := dbOpenTest(t, true)
 		setDbLogging(t, dbs)
@@ -416,6 +417,7 @@ func TestAccountDBInMemoryAcct(t *testing.T) {
 		baseResources.init(nil, 100, 80)
 
 		t.Run(fmt.Sprintf("test%d", i), func(t *testing.T) {
+			t.Parallel()
 
 			accountDeltas, numAcctDeltas, numResDeltas := test(addr)
 			lastRound := uint64(len(accountDeltas) + 1)
@@ -2104,6 +2106,7 @@ func TestResourcesDataSetData(t *testing.T) {
 		},
 	}
 	for _, testType := range []basics.CreatableType{basics.AssetCreatable, basics.AppCreatable} {
+		testType := testType
 		for _, test := range tests {
 			var testTypeStr string
 			if testType == basics.AssetCreatable {
@@ -2112,6 +2115,7 @@ func TestResourcesDataSetData(t *testing.T) {
 				testTypeStr = "app"
 			}
 			t.Run(fmt.Sprintf("test_%s_%s", testTypeStr, test.name), func(t *testing.T) {
+				t.Parallel()
 				for i, ts := range test.testcases {
 					t.Run(fmt.Sprintf("case_%d", i), func(t *testing.T) {
 						rd := test.baseRD(testType)
@@ -2168,9 +2172,18 @@ func TestBaseAccountDataIsEmpty(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, expectedEncoding, string(encoding))
 	}
-	t.Run("Positive", positiveTesting)
-	t.Run("Negative", negativeTesting)
-	t.Run("Structure", structureTesting)
+	t.Run("Positive", func (t *testing.T) {
+		t.Parallel()
+		positiveTesting(t)
+	})
+	t.Run("Negative", func (t *testing.T) {
+		t.Parallel()
+		negativeTesting(t)
+	})
+	t.Run("Structure", func (t *testing.T) {
+		t.Parallel()
+		structureTesting(t)
+	})
 
 }
 
@@ -2216,9 +2229,18 @@ func TestBaseOnlineAccountDataIsEmpty(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, expectedEncoding, string(encoding))
 	}
-	t.Run("Positive", positiveTesting)
-	t.Run("Negative", negativeTesting)
-	t.Run("Structure", structureTesting)
+	t.Run("Positive", func (t *testing.T) {
+		t.Parallel()
+		positiveTesting(t)
+	})
+	t.Run("Negative", func (t *testing.T) {
+		t.Parallel()
+		negativeTesting(t)
+	})
+	t.Run("Structure", func (t *testing.T) {
+		t.Parallel()
+		structureTesting(t)
+	})
 
 }
 
@@ -2818,8 +2840,10 @@ func TestAccountUnorderedUpdates(t *testing.T) {
 	acctVariants := compactAccountDeltasPermutations(a, acctDeltas)
 	resVariants := compactResourcesDeltasPermutations(a, resDeltas)
 	for i, acctVariant := range acctVariants {
+		acctVariant := acctVariant
 		for j, resVariant := range resVariants {
 			t.Run(fmt.Sprintf("acct-perm-%d|res-perm-%d", i, j), func(t *testing.T) {
+				t.Parallel()
 				a := require.New(t)
 				mock2 := mock.clone()
 				updatedAccounts, updatedResources, err := accountsNewRoundImpl(
