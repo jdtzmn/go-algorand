@@ -24,6 +24,7 @@ import (
 )
 
 func TestSignAndVerifyFalcon(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -42,6 +43,7 @@ func TestSignAndVerifyFalcon(t *testing.T) {
 }
 
 func TestSignAndVerifyFalconHashable(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -60,6 +62,7 @@ func TestSignAndVerifyFalconHashable(t *testing.T) {
 }
 
 func TestFalconCanHandleNilSignature(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -73,6 +76,7 @@ func TestFalconCanHandleNilSignature(t *testing.T) {
 }
 
 func TestVerificationBytes(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -87,6 +91,7 @@ func TestVerificationBytes(t *testing.T) {
 }
 
 func TestFalconsFormatConversion(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -110,6 +115,7 @@ func TestFalconsFormatConversion(t *testing.T) {
 }
 
 func TestFalconSignature_ValidateVersion(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

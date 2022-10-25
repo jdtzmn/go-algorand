@@ -68,6 +68,7 @@ func calculateHashOnInternalNode(leftNode, rightNode []byte) []byte {
 }
 
 func TestEphemeralPublicKeysCommitmentBinaryFormat(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

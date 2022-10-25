@@ -90,6 +90,7 @@ func TestTxnMerkle(t *testing.T) {
 }
 
 func TestBlock_TxnMerkleTreeSHA256(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for ntxn := uint64(0); ntxn < 128; ntxn++ {

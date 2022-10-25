@@ -215,6 +215,7 @@ func TestDetails(t *testing.T) {
 }
 
 func TestHeartbeatDetails(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	f := makeTelemetryTestFixture(logrus.InfoLevel)

@@ -137,6 +137,7 @@ func newBlock(t *testing.T, ml *mockLedgerForTracker, testProtocolVersion protoc
 // 3. Ensure the DB and the base cache are up to date (report them offline)
 // 4. Ensure expiration works
 func TestAcctOnline(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	const seedLookback = 2
@@ -423,6 +424,7 @@ func TestAcctOnline(t *testing.T) {
 // TestAcctOnlineCache toggles accounts from being online to offline and verifies
 // that the db and cache have the correct data
 func TestAcctOnlineCache(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	const numAccts = 5
@@ -633,6 +635,7 @@ func TestAcctOnlineCache(t *testing.T) {
 
 // TestAcctOnlineRoundParamsOffset checks that roundParamsOffset return the correct indices.
 func TestAcctOnlineRoundParamsOffset(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ao := onlineAccounts{}
@@ -699,6 +702,7 @@ func TestAcctOnlineRoundParamsOffset(t *testing.T) {
 // of new blocks are added to the ledger. Also ensure that these data structures are
 // trimmed properly to hold only proto.MaxBalLookback entries.
 func TestAcctOnlineRoundParamsCache(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	const maxBalLookback = 100
 	protoParams := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -823,6 +827,7 @@ func TestAcctOnlineRoundParamsCache(t *testing.T) {
 // TestAcctOnlineCacheDBSync checks if lookup happens in between db commit and the cache update
 // the online account tracker returns correct data
 func TestAcctOnlineCacheDBSync(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	const seedLookback = 2
@@ -866,6 +871,7 @@ func TestAcctOnlineCacheDBSync(t *testing.T) {
 
 	// test 1: large deltas, have addrA offline in deltas, ensure it works
 	t.Run("large-delta-go-offline", func(t *testing.T) {
+		t.Parallel()
 		ml := makeMockLedgerForTracker(t, true, 1, testProtocolVersion, genesisAccts)
 		defer ml.Close()
 		conf := config.GetDefaultLocal()
@@ -946,6 +952,7 @@ func TestAcctOnlineCacheDBSync(t *testing.T) {
 
 	// test 2: small deltas, have addrA offline in DB and in the cache, ensure it works
 	t.Run("small-delta-go-offline", func(t *testing.T) {
+		t.Parallel()
 		ml := makeMockLedgerForTracker(t, true, 1, testProtocolVersion, genesisAccts)
 		defer ml.Close()
 		conf := config.GetDefaultLocal()
@@ -993,6 +1000,7 @@ func TestAcctOnlineCacheDBSync(t *testing.T) {
 	// addrA does offline, both online and offline entries gets removed from the DB but the cache
 	// must returns a correct value
 	t.Run("no-delta-go-offline-delete", func(t *testing.T) {
+		t.Parallel()
 		ml := makeMockLedgerForTracker(t, true, 1, testProtocolVersion, genesisAccts)
 		defer ml.Close()
 		conf := config.GetDefaultLocal()
@@ -1115,6 +1123,7 @@ func TestAcctOnlineCacheDBSync(t *testing.T) {
 // some accounts gets online and then offline in the same commit range,
 // and then online again in the next range with the same voting data
 func TestAcctOnlineBaseAccountCache(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	const seedLookback = 2
@@ -1219,6 +1228,7 @@ func TestAcctOnlineBaseAccountCache(t *testing.T) {
 }
 
 func TestAcctOnlineVotersLongerHistory(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	const seedLookback = 3
@@ -1360,6 +1370,7 @@ func newBlockWithUpdates(genesisAccts []map[basics.Address]basics.AccountData, u
 }
 
 func TestAcctOnlineTop(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	algops := MicroAlgoOperations{a: a}
@@ -1470,6 +1481,7 @@ func TestAcctOnlineTop(t *testing.T) {
 }
 
 func TestAcctOnlineTopInBatches(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1506,6 +1518,7 @@ func TestAcctOnlineTopInBatches(t *testing.T) {
 }
 
 func TestAcctOnlineTopBetweenCommitAndPostCommit(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1599,6 +1612,7 @@ func TestAcctOnlineTopBetweenCommitAndPostCommit(t *testing.T) {
 }
 
 func TestAcctOnlineTopDBBehindMemRound(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1693,6 +1707,7 @@ func TestAcctOnlineTopDBBehindMemRound(t *testing.T) {
 }
 
 func TestAcctOnlineTop_ChangeOnlineStake(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	algops := MicroAlgoOperations{a: a}

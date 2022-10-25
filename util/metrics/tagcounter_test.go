@@ -82,6 +82,7 @@ func TestTagCounter(t *testing.T) {
 }
 
 func TestTagCounterFilter(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	tags := make([]string, 17)
@@ -160,6 +161,7 @@ func TestTagCounterFilter(t *testing.T) {
 }
 
 func TestTagCounterWriteMetric(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	tc := NewTagCounter("count_msgs_{TAG}", "number of {TAG} messages")

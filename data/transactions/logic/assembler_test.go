@@ -2754,6 +2754,7 @@ func TestGetSpec(t *testing.T) {
 }
 
 func TestAddPseudoDocTags(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// Not parallel because it modifies pseudoOps and opDocByName which are global maps
 	// t.Parallel()

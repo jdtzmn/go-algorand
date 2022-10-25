@@ -27,6 +27,7 @@ import (
 )
 
 func TestPrint(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	testcases := []struct {

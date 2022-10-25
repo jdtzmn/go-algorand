@@ -363,6 +363,7 @@ func TestAccountDBRound(t *testing.T) {
 // TestAccountDBInMemoryAcct checks in-memory only account modifications are handled correctly by
 // makeCompactAccountDeltas, makeCompactResourceDeltas and accountsNewRound
 func TestAccountDBInMemoryAcct(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -464,6 +465,7 @@ func TestAccountDBInMemoryAcct(t *testing.T) {
 }
 
 func TestAccountStorageWithStateProofID(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	dbs, _ := dbOpenTest(t, true)
@@ -1192,6 +1194,7 @@ func (a *compactResourcesDeltas) upsertOld(addr basics.Address, old persistedRes
 	a.deltas[idx].address = addr
 }
 func TestCompactResourceDeltas(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -1281,6 +1284,7 @@ func TestCompactResourceDeltas(t *testing.T) {
 }
 
 func TestResourcesDataApp(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -1484,6 +1488,7 @@ func TestResourcesDataApp(t *testing.T) {
 }
 
 func TestResourcesDataAsset(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -1688,6 +1693,7 @@ func TestResourcesDataAsset(t *testing.T) {
 // TestResourcesDataSetData checks combinations of old/new values when
 // updating resourceData from resourceDelta
 func TestResourcesDataSetData(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -2132,6 +2138,7 @@ func TestResourcesDataSetData(t *testing.T) {
 }
 
 func TestBaseAccountDataIsEmpty(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	positiveTesting := func(t *testing.T) {
 		var ba baseAccountData
@@ -2168,6 +2175,7 @@ func TestBaseAccountDataIsEmpty(t *testing.T) {
 }
 
 func TestBaseOnlineAccountDataIsEmpty(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	positiveTesting := func(t *testing.T) {
@@ -2215,6 +2223,7 @@ func TestBaseOnlineAccountDataIsEmpty(t *testing.T) {
 }
 
 func TestBaseOnlineAccountDataGettersSetters(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -2269,6 +2278,7 @@ func TestBaseOnlineAccountDataGettersSetters(t *testing.T) {
 }
 
 func TestBaseVotingDataGettersSetters(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	data := ledgertesting.RandomAccountData(1)
@@ -2296,18 +2306,21 @@ func TestBaseVotingDataGettersSetters(t *testing.T) {
 }
 
 func TestBaseOnlineAccountDataReflect(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	require.Equal(t, 4, reflect.TypeOf(baseOnlineAccountData{}).NumField(), "update all getters and setters for baseOnlineAccountData and change the field count")
 }
 
 func TestBaseVotingDataReflect(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	require.Equal(t, 7, reflect.TypeOf(baseVotingData{}).NumField(), "update all getters and setters for baseVotingData and change the field count")
 }
 
 func TestLookupAccountAddressFromAddressID(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	dbs, _ := dbOpenTest(t, true)
@@ -2620,6 +2633,7 @@ func permHeap(n int) (result [][]int) {
 }
 
 func TestFactorialPerm(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -2725,6 +2739,7 @@ func compactResourcesDeltasPermutations(a *require.Assertions, crd compactResour
 // While processing acct deltas (delete, create) SQLite reused on old rowid for new account.
 // Then this rowid was discovered as addrid for opt-in operation and the "UNIQUE constraint failed" error happened.
 func TestAccountUnorderedUpdates(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -2821,6 +2836,7 @@ func TestAccountUnorderedUpdates(t *testing.T) {
 // TestAccountsNewRoundDeletedResourceEntries checks that accountsNewRound
 // returns updated entries with empty addrid as an indication of deleted entry
 func TestAccountsNewRoundDeletedResourceEntries(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -2938,6 +2954,7 @@ func TestAccountsNewRoundDeletedResourceEntries(t *testing.T) {
 // - for round 3 only C returned
 // The test also checks accountsDbQueries.lookupOnline
 func TestAccountOnlineQueries(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -3260,6 +3277,7 @@ func (w *mockOnlineAccountsWriter) insertOnlineAccount(addr basics.Address, norm
 func (w *mockOnlineAccountsWriter) close() {}
 
 func TestAccountOnlineAccountsNewRound(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -3364,6 +3382,7 @@ func TestAccountOnlineAccountsNewRound(t *testing.T) {
 }
 
 func TestAccountOnlineAccountsNewRoundFlip(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -3442,6 +3461,7 @@ func TestAccountOnlineAccountsNewRoundFlip(t *testing.T) {
 }
 
 func TestAccountOnlineRoundParams(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	dbs, _ := dbOpenTest(t, true)
@@ -3483,6 +3503,7 @@ func TestAccountOnlineRoundParams(t *testing.T) {
 }
 
 func TestRowidsToChunkedArgs(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	res := rowidsToChunkedArgs([]int64{1})
@@ -3548,6 +3569,7 @@ func TestRowidsToChunkedArgs(t *testing.T) {
 
 // TestAccountDBTxTailLoad checks txtailNewRound and loadTxTail delete and load right data
 func TestAccountDBTxTailLoad(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	const inMem = true
@@ -3596,6 +3618,7 @@ func TestAccountDBTxTailLoad(t *testing.T) {
 // onlineAccountsDelete(3): A offline, B online
 // etc
 func TestOnlineAccountsDeletion(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	dbs, _ := dbOpenTest(t, true)
@@ -3724,6 +3747,7 @@ func TestOnlineAccountsDeletion(t *testing.T) {
 
 // Test functions operating on catchpointfirststageinfo table.
 func TestCatchpointFirstStageInfoTable(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	dbs, _ := dbOpenTest(t, true)
@@ -3770,6 +3794,7 @@ func TestCatchpointFirstStageInfoTable(t *testing.T) {
 }
 
 func TestUnfinishedCatchpointsTable(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	dbs, _ := dbOpenTest(t, true)
@@ -3818,6 +3843,7 @@ func TestUnfinishedCatchpointsTable(t *testing.T) {
 }
 
 func TestRemoveOfflineStateProofID(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accts := ledgertesting.RandomAccounts(20, true)

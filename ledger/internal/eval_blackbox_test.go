@@ -222,6 +222,7 @@ func TestBlockEvaluator(t *testing.T) {
 }
 
 func TestRekeying(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// t.Parallel() NO! This test manipulates []protocol.Consensus
 
@@ -1207,6 +1208,7 @@ func TestUnfundedSenders(t *testing.T) {
 // transaction, so the app should be able to make an app call as that requires
 // no min balance.
 func TestAppCallAppDuringInit(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()

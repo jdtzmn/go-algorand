@@ -1389,6 +1389,7 @@ func TestTxPoolSizeLimits(t *testing.T) {
 }
 
 func TestStateProofLogging(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]

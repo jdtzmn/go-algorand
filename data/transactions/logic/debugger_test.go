@@ -185,6 +185,7 @@ intc_0
 `
 
 func TestParseCallstack(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	expectedCallFrames := []CallFrame{
@@ -209,6 +210,7 @@ func TestParseCallstack(t *testing.T) {
 }
 
 func TestCallStackUpdate(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	expectedCallFrames := []CallFrame{

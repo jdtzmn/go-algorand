@@ -26,6 +26,7 @@ import (
 )
 
 func TestProofSerialization(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -85,6 +86,7 @@ func TestProofSerialization(t *testing.T) {
 }
 
 func TestProofSerializationMaxTree(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -109,6 +111,7 @@ func TestProofSerializationMaxTree(t *testing.T) {
 }
 
 func TestProofSerializationOneLeafTree(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -134,6 +137,7 @@ func TestProofSerializationOneLeafTree(t *testing.T) {
 }
 
 func TestConcatenatedProofsMissingChild(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -167,6 +171,7 @@ func TestConcatenatedProofsMissingChild(t *testing.T) {
 }
 
 func TestConcatenatedProofsFullTree(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -198,6 +203,7 @@ func TestConcatenatedProofsFullTree(t *testing.T) {
 }
 
 func TestConcatenatedProofsOneLeaf(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -227,6 +233,7 @@ func TestConcatenatedProofsOneLeaf(t *testing.T) {
 }
 
 func TestProofDeserializationError(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

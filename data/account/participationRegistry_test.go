@@ -144,6 +144,7 @@ func registryCloseTest(t testing.TB, registry *participationDB, dbfilePrefix str
 
 // Insert participation records and make sure they can be fetched.
 func TestParticipation_InsertGet(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -197,6 +198,7 @@ func TestParticipation_InsertGet(t *testing.T) {
 
 // Insert participation records and make sure they can be fetched.
 func TestParticipation_InsertGetWithoutEmptyStateproof(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -237,6 +239,7 @@ func TestParticipation_InsertGetWithoutEmptyStateproof(t *testing.T) {
 
 // Make sure a record can be deleted by id.
 func TestParticipation_Delete(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistryImpl(t, false, true) // inMem=false, erasable=true
@@ -275,6 +278,7 @@ func (m testMessage) ToBeHashed() (protocol.HashID, []byte) {
 }
 
 func TestParticipation_DeleteExpired(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistryImpl(t, false, true) // inMem=false, erasable=true
@@ -320,6 +324,7 @@ func TestParticipation_DeleteExpired(t *testing.T) {
 }
 
 func TestParticipation_CleanupTablesAfterDeleteExpired(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistryImpl(t, false, true) // inMem=false, erasable=true
@@ -382,6 +387,7 @@ func TestParticipation_CleanupTablesAfterDeleteExpired(t *testing.T) {
 
 // Make sure the register function properly sets effective first/last for all effected records.
 func TestParticipation_Register(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -420,6 +426,7 @@ func TestParticipation_Register(t *testing.T) {
 
 // Test error when registering a non-existing participation ID.
 func TestParticipation_RegisterInvalidID(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -433,6 +440,7 @@ func TestParticipation_RegisterInvalidID(t *testing.T) {
 
 // Test error attempting to register a key with an invalid range.
 func TestParticipation_RegisterInvalidRange(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -451,6 +459,7 @@ func TestParticipation_RegisterInvalidRange(t *testing.T) {
 
 // Test the recording function.
 func TestParticipation_Record(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -505,6 +514,7 @@ func TestParticipation_Record(t *testing.T) {
 
 // Test that attempting to record an invalid action generates an error.
 func TestParticipation_RecordInvalidActionAndOutOfRange(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -527,6 +537,7 @@ func TestParticipation_RecordInvalidActionAndOutOfRange(t *testing.T) {
 }
 
 func TestParticipation_RecordNoKey(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -539,6 +550,7 @@ func TestParticipation_RecordNoKey(t *testing.T) {
 // Test that an error is generated if the record function updates multiple records.
 // This would only happen if the DB was in an inconsistent state.
 func TestParticipation_RecordMultipleUpdates(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -589,6 +601,7 @@ func TestParticipation_RecordMultipleUpdates(t *testing.T) {
 }
 
 func TestParticipation_MultipleInsertError(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -608,6 +621,7 @@ func TestParticipation_MultipleInsertError(t *testing.T) {
 // Basically multiple records with the same ParticipationID are a big no-no and
 // it should be detected as quickly as possible.
 func TestParticipation_RecordMultipleUpdates_DB(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, _ := getRegistry(t)
@@ -710,6 +724,7 @@ func TestParticipation_RecordMultipleUpdates_DB(t *testing.T) {
 }
 
 func TestParticipation_NoKeyToUpdate(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 	registry, dbfile := getRegistry(t)
@@ -733,6 +748,7 @@ func TestParticipation_NoKeyToUpdate(t *testing.T) {
 
 // TestParticipion_Blobs adds some secrets to the registry and makes sure the same ones are returned.
 func TestParticipion_Blobs(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -776,6 +792,7 @@ func TestParticipion_Blobs(t *testing.T) {
 
 // TestParticipion_EmptyBlobs makes sure empty blobs are set to nil
 func TestParticipion_EmptyBlobs(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 	registry, dbfile := getRegistry(t)
@@ -820,6 +837,7 @@ func TestParticipion_EmptyBlobs(t *testing.T) {
 }
 
 func TestRegisterUpdatedEvent(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -876,6 +894,7 @@ func TestRegisterUpdatedEvent(t *testing.T) {
 // TestFlushDeadlock reproduced a deadlock when calling Flush repeatedly. This test reproduced the deadlock and
 // verifies the fix.
 func TestFlushDeadlock(t *testing.T) {
+	t.Parallel()
 	var wg sync.WaitGroup
 
 	partitiontest.PartitionTest(t)
@@ -906,6 +925,7 @@ func TestFlushDeadlock(t *testing.T) {
 }
 
 func TestAddStateProofKeys(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -958,6 +978,7 @@ func TestAddStateProofKeys(t *testing.T) {
 }
 
 func TestGetRoundSecretsWithNilStateProofVerifier(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 	registry, dbfile := getRegistry(t)
@@ -988,6 +1009,7 @@ func TestGetRoundSecretsWithNilStateProofVerifier(t *testing.T) {
 }
 
 func TestSecretNotFound(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -1007,6 +1029,7 @@ func TestSecretNotFound(t *testing.T) {
 }
 
 func TestAddingSecretTwice(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 	registry, dbfile := getRegistry(t)
@@ -1045,6 +1068,7 @@ func TestAddingSecretTwice(t *testing.T) {
 }
 
 func TestGetRoundSecretsWithoutStateProof(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 	registry, dbfile := getRegistry(t)
@@ -1103,6 +1127,7 @@ func (k keypairs) findPairForSpecificRound(round uint64) merklesignature.KeyRoun
 }
 
 func TestDeleteStateProofKeys(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	registry, dbfile := getRegistry(t)
@@ -1172,6 +1197,7 @@ func TestDeleteStateProofKeys(t *testing.T) {
 
 // test that sets up an error that should come up while flushing, and ensures that flush resets the last error
 func TestFlushResetsLastError(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 	registry, dbfile := getRegistry(t)
@@ -1210,6 +1236,7 @@ func TestFlushResetsLastError(t *testing.T) {
 // TestParticipationDB_Locking tries fetching StateProof keys from the DB while the Rolling table is being updated.
 // Makes sure the table is not locked for reading while a different one is locked for writing.
 func TestParticipationDB_Locking(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1280,6 +1307,7 @@ func TestParticipationDB_Locking(t *testing.T) {
 }
 
 func TestParticipationDBInstallWhileReading(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

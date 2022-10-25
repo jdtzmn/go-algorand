@@ -30,6 +30,7 @@ import (
 )
 
 func TestConnectionLimiterBasic(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	e := echo.New()
@@ -87,6 +88,7 @@ func TestConnectionLimiterBasic(t *testing.T) {
 }
 
 func TestConnectionLimiterForwardsError(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	handlerError := errors.New("handler error")

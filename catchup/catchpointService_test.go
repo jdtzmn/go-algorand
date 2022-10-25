@@ -79,6 +79,7 @@ func (m *catchpointCatchupAccessorMock) Ledger() (l ledger.CatchupAccessorClient
 // TestCatchpointServicePeerRank ensures CatchpointService does not crash when a block fetched
 // from the local ledger and not from network when ranking a peer
 func TestCatchpointServicePeerRank(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	l := catchpointCatchupLedger{}

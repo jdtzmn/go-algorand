@@ -25,6 +25,7 @@ import (
 )
 
 func TestGetSourceMap(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -54,6 +55,7 @@ func TestGetSourceMap(t *testing.T) {
 }
 
 func TestVLQ(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

@@ -25,6 +25,7 @@ import (
 )
 
 func TestRoundToIndex(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	count := uint64(200)
@@ -49,6 +50,7 @@ func TestRoundToIndex(t *testing.T) {
 }
 
 func TestIndexToRoundToIndex(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	count := uint64(200)
@@ -66,6 +68,7 @@ func TestIndexToRoundToIndex(t *testing.T) {
 }
 
 func TestErrors(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	firstValid := uint64(101)

@@ -30,6 +30,7 @@ import (
 )
 
 func TestLRUBasicResources(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseRes lruResources
@@ -89,6 +90,7 @@ func TestLRUBasicResources(t *testing.T) {
 }
 
 func TestLRUResourcesPendingWrites(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseRes lruResources
@@ -142,6 +144,7 @@ func (cl *lruResourcesTestLogger) Warnf(s string, args ...interface{}) {
 }
 
 func TestLRUResourcesPendingWritesWarning(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseRes lruResources
@@ -169,6 +172,7 @@ func TestLRUResourcesPendingWritesWarning(t *testing.T) {
 }
 
 func TestLRUResourcesOmittedPendingWrites(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseRes lruResources

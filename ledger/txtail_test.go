@@ -240,6 +240,7 @@ func TestTxTailLoadFromDisk(t *testing.T) {
 }
 
 func TestTxTailDeltaTracking(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for _, protoVersion := range []protocol.ConsensusVersion{protocol.ConsensusV32, protocol.ConsensusFuture} {

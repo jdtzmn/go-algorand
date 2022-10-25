@@ -26,6 +26,7 @@ import (
 )
 
 func TestBuilderSanity(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -43,6 +44,7 @@ func TestBuilderSanity(t *testing.T) {
 }
 
 func TestBuilderFitsToCPUs(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	numOfKeys := uint64(runtime.NumCPU() * 2)
@@ -53,6 +55,7 @@ func TestBuilderFitsToCPUs(t *testing.T) {
 }
 
 func TestBuilderOneKey(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	numOfKeys := uint64(1)
@@ -62,6 +65,7 @@ func TestBuilderOneKey(t *testing.T) {
 }
 
 func TestBuilderZeroKeys(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	numOfKeys := uint64(0)

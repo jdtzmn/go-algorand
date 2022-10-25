@@ -132,6 +132,7 @@ func getSampleAccountData() AccountData {
 }
 
 func TestEncodedAccountDataSize(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	maxStateSchema := StateSchema{
@@ -252,6 +253,7 @@ func TestEncodedAccountAllocationBounds(t *testing.T) {
 }
 
 func TestAppIndexHashing(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	i := AppIndex(12)
@@ -271,6 +273,7 @@ func TestAppIndexHashing(t *testing.T) {
 }
 
 func TestOnlineAccountData(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ad := getSampleAccountData()

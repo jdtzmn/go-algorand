@@ -204,6 +204,7 @@ func TestEncodeJSON(t *testing.T) {
 }
 
 func TestMsgpDecode(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var tag Tag = "test"
@@ -238,6 +239,7 @@ func TestMsgpDecode(t *testing.T) {
 }
 
 func TestRandomizeObjectWithPtrField(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	type testObjA struct {

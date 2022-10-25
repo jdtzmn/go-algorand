@@ -32,6 +32,7 @@ import (
 )
 
 func TestMetricsReload(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	mt := metricsTracker{}

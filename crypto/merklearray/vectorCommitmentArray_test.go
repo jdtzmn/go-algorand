@@ -33,6 +33,7 @@ func indexTranslate(t *testing.T, from, to uint64, pathLen uint8) {
 }
 
 func TestIndexing(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var pathLen uint8
@@ -92,6 +93,7 @@ func vcSizeInnerTest(size uint64) *vectorCommitmentArray {
 }
 
 func TestIndexOutOfBounds(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var pathLen uint8
@@ -121,6 +123,7 @@ func TestIndexOutOfBounds(t *testing.T) {
 }
 
 func TestVcSizes(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var vc *vectorCommitmentArray
@@ -176,6 +179,7 @@ func TestVcSizes(t *testing.T) {
 }
 
 func TestVcArrayPadding(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	testArray := make(TestArray, 11)

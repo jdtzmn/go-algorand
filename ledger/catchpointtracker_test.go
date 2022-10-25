@@ -45,6 +45,7 @@ import (
 )
 
 func TestIsWritingCatchpointFile(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ct := &catchpointTracker{}
@@ -76,6 +77,7 @@ func newCatchpointTracker(tb testing.TB, l *mockLedgerForTracker, conf config.Lo
 }
 
 func TestGetCatchpointStream(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accts := []map[basics.Address]basics.AccountData{ledgertesting.RandomAccounts(20, true)}
@@ -152,6 +154,7 @@ func TestGetCatchpointStream(t *testing.T) {
 // and ensures that it did not error, the catchpoint files were correctly deleted, and that deleteStoredCatchpoints contains no more
 // entries.
 func TestAcctUpdatesDeleteStoredCatchpoints(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accts := []map[basics.Address]basics.AccountData{ledgertesting.RandomAccounts(20, true)}
@@ -204,6 +207,7 @@ func TestAcctUpdatesDeleteStoredCatchpoints(t *testing.T) {
 // It is done by creating empty directories in the catchpoint root directory.
 // When algod boots up it should remove those directories.
 func TestSchemaUpdateDeleteStoredCatchpoints(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// we don't want to run this test before the binary is compiled against the latest database upgrade schema.
@@ -270,6 +274,7 @@ func getNumberOfCatchpointFilesInDir(catchpointDir string) (int, error) {
 // In addition, when deleting old catchpoint files an empty directory should be deleted
 // as well.
 func TestRecordCatchpointFile(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	temporaryDirectory := t.TempDir()
@@ -379,6 +384,7 @@ func BenchmarkLargeCatchpointDataWriting(b *testing.B) {
 }
 
 func TestReproducibleCatchpointLabels(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	if runtime.GOARCH == "arm" || runtime.GOARCH == "arm64" {
@@ -605,6 +611,7 @@ func (bt *blockingTracker) close() {
 }
 
 func TestCatchpointTrackerNonblockingCatchpointWriting(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	testProtocolVersion := protocol.ConsensusVersion("test-protocol-TestReproducibleCatchpointLabels")
@@ -751,6 +758,7 @@ func TestCatchpointTrackerNonblockingCatchpointWriting(t *testing.T) {
 }
 
 func TestCalculateFirstStageRounds(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	type TestCase struct {
@@ -805,6 +813,7 @@ func TestCalculateFirstStageRounds(t *testing.T) {
 }
 
 func TestCalculateCatchpointRounds(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	type TestCase struct {
@@ -838,6 +847,7 @@ func TestCalculateCatchpointRounds(t *testing.T) {
 // Test that pruning first stage catchpoint database records and catchpoint data files
 // works.
 func TestFirstStageInfoPruning(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback
@@ -933,6 +943,7 @@ func TestFirstStageInfoPruning(t *testing.T) {
 // Test that on startup the catchpoint tracker restarts catchpoint's first stage if
 // there is an unfinished first stage record in the database.
 func TestFirstStagePersistence(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback
@@ -1035,6 +1046,7 @@ func TestFirstStagePersistence(t *testing.T) {
 // Test that on startup the catchpoint tracker restarts catchpoint's second stage if
 // there is an unfinished catchpoint record in the database.
 func TestSecondStagePersistence(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback
@@ -1171,6 +1183,7 @@ func TestSecondStagePersistence(t *testing.T) {
 // (e.g. catchpoints were disabled at first stage), the unfinished catchpoint
 // database record is deleted.
 func TestSecondStageDeletesUnfinishedCatchpointRecord(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback
@@ -1260,6 +1273,7 @@ func TestSecondStageDeletesUnfinishedCatchpointRecord(t *testing.T) {
 // Test that on startup the catchpoint tracker deletes the unfinished catchpoint
 // database record when the first stage database record is missing.
 func TestSecondStageDeletesUnfinishedCatchpointRecordAfterRestart(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback

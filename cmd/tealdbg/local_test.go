@@ -1115,6 +1115,7 @@ func TestLocalBalanceAdapterIndexer(t *testing.T) {
 }
 
 func TestDebugTxSubmit(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1188,6 +1189,7 @@ int 1`
 }
 
 func TestDebugFeePooling(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1284,6 +1286,7 @@ int 1`
 }
 
 func TestDebugCostPooling(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1412,6 +1415,7 @@ byte 0x5ce9454909639d2d17a3f753ce7d93fa0b9ab12e // addr
 }
 
 func TestGroupTxnIdx(t *testing.T) {
+	t.Parallel()
 
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
@@ -1511,6 +1515,7 @@ func TestGroupTxnIdx(t *testing.T) {
 }
 
 func TestRunAllGloads(t *testing.T) {
+	t.Parallel()
 
 	partitiontest.PartitionTest(t)
 	a := require.New(t)

@@ -1075,6 +1075,7 @@ func testAppAccountDeltaIndicesCompatibility(t *testing.T, source string, accoun
 // Block 3: write to global state (goes into creator's AD), write to local state of txn.Account[1] (not a txn sender)
 // In this case StateDelta will not have base record modification, only storage
 func TestParitalDeltaWrites(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	source := `#pragma version 2
@@ -1238,6 +1239,7 @@ int 1
 
 // TestLogicSigValidation tests that LogicSig-signed transactions can be validated properly.
 func TestLogicSigValidation(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	source := `#pragma version 6

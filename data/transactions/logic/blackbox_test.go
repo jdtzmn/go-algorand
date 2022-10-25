@@ -33,6 +33,7 @@ import (
 )
 
 func TestNewAppEvalParams(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	params := []config.ConsensusParams{

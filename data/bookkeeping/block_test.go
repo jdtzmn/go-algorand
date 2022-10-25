@@ -552,6 +552,7 @@ func performRewardsRateCalculation(
 }
 
 func TestNextRewardsRateWithFix(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto, ok := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -597,6 +598,7 @@ func TestNextRewardsRateWithFix(t *testing.T) {
 }
 
 func TestNextRewardsRateFailsWithoutFix(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto, ok := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -616,6 +618,7 @@ func TestNextRewardsRateFailsWithoutFix(t *testing.T) {
 }
 
 func TestNextRewardsRateWithFixUsesNewRate(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto, ok := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -650,6 +653,7 @@ func TestNextRewardsRateWithFixUsesNewRate(t *testing.T) {
 }
 
 func TestNextRewardsRateWithFixPoolBalanceInsufficient(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto, ok := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -684,6 +688,7 @@ func TestNextRewardsRateWithFixPoolBalanceInsufficient(t *testing.T) {
 }
 
 func TestNextRewardsRateWithFixMaxSpentOverOverflow(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto, ok := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -720,6 +725,7 @@ func TestNextRewardsRateWithFixMaxSpentOverOverflow(t *testing.T) {
 }
 
 func TestNextRewardsRateWithFixRewardsWithResidueOverflow(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto, ok := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -746,6 +752,7 @@ func TestNextRewardsRateWithFixRewardsWithResidueOverflow(t *testing.T) {
 }
 
 func TestNextRewardsRateWithFixNextRewardLevelOverflow(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto, ok := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -772,6 +779,7 @@ func TestNextRewardsRateWithFixNextRewardLevelOverflow(t *testing.T) {
 }
 
 func TestBlock_ContentsMatchHeader(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -859,6 +867,7 @@ func TestBlock_ContentsMatchHeader(t *testing.T) {
 }
 
 func TestBlockHeader_Serialization(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

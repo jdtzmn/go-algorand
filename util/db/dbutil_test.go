@@ -481,11 +481,13 @@ func TestReadingWhileWriting(t *testing.T) {
 
 // using Write-Ahead Logging (WAL)
 func TestLockingTableWhileWritingWAL(t *testing.T) {
+	t.Parallel()
 	testLockingTableWhileWriting(t, true)
 }
 
 // using the default Rollback Journal
 func TestLockingTableWhileWritingJournal(t *testing.T) {
+	t.Parallel()
 	testLockingTableWhileWriting(t, false)
 }
 

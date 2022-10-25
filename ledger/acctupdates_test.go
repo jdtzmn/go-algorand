@@ -1442,6 +1442,7 @@ func TestCompactDeltas(t *testing.T) {
 }
 
 func TestCompactDeltasResources(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	addrs := make([]basics.Address, 10)
@@ -1614,6 +1615,7 @@ func TestCompactDeltasResources(t *testing.T) {
 
 // TestAcctUpdatesCachesInitialization test the functionality of the initializeCaches cache.
 func TestAcctUpdatesCachesInitialization(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// The next operations are heavy on the memory.
@@ -1716,6 +1718,7 @@ func TestAcctUpdatesCachesInitialization(t *testing.T) {
 
 // TestAcctUpdatesSplittingConsensusVersionCommits tests the a sequence of commits that spans over multiple consensus versions works correctly.
 func TestAcctUpdatesSplittingConsensusVersionCommits(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	initProtocolVersion := protocol.ConsensusV20
@@ -1834,6 +1837,7 @@ func TestAcctUpdatesSplittingConsensusVersionCommits(t *testing.T) {
 // TestAcctUpdatesSplittingConsensusVersionCommitsBoundary tests the a sequence of commits that spans over multiple consensus versions works correctly, and
 // in particular, complements TestAcctUpdatesSplittingConsensusVersionCommits by testing the commit boundary.
 func TestAcctUpdatesSplittingConsensusVersionCommitsBoundary(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	initProtocolVersion := protocol.ConsensusV20
@@ -1987,6 +1991,7 @@ func TestAcctUpdatesSplittingConsensusVersionCommitsBoundary(t *testing.T) {
 // TestAcctUpdatesResources checks that created, deleted, and created resource keep
 // acct updates' compact deltas in a correct state
 func TestAcctUpdatesResources(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accts := []map[basics.Address]basics.AccountData{ledgertesting.RandomAccounts(20, true)}
@@ -2203,6 +2208,7 @@ func TestConsecutiveVersion(t *testing.T) {
 }
 
 func TestAcctUpdatesLookupLatest(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accts := ledgertesting.RandomAccounts(10, false)
@@ -2365,6 +2371,7 @@ func testAcctUpdatesLookupRetry(t *testing.T, assertFn func(au *accountUpdates, 
 }
 
 func TestAcctUpdatesLookupLatestRetry(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	testAcctUpdatesLookupRetry(t,
@@ -2386,6 +2393,7 @@ func TestAcctUpdatesLookupLatestRetry(t *testing.T) {
 }
 
 func TestAcctUpdatesLookupRetry(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	testAcctUpdatesLookupRetry(t,
@@ -2485,6 +2493,7 @@ func auNewBlock(t *testing.T, rnd basics.Round, au *accountUpdates, base map[bas
 // - call lookupLatest, ensure it blocks
 // - advance lookupLatest and check the content is actual
 func TestAcctUpdatesLookupLatestCacheRetry(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accts := []map[basics.Address]basics.AccountData{ledgertesting.RandomAccounts(20, true)}
@@ -2616,6 +2625,7 @@ func TestAcctUpdatesLookupLatestCacheRetry(t *testing.T) {
 // TestAcctUpdatesLookupResources creates 3 assets, deletes one
 // and checks au.resources with deleted resources are not counted toward totals
 func TestAcctUpdatesLookupResources(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accts := []map[basics.Address]basics.AccountData{ledgertesting.RandomAccounts(1, true)}

@@ -96,6 +96,7 @@ func (p *MetricTest) testMetricsHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func TestSanitizeTelemetryName(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for _, tc := range []struct{ in, out string }{
@@ -117,6 +118,7 @@ func TestSanitizeTelemetryName(t *testing.T) {
 }
 
 func TestSanitizePrometheusName(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for _, tc := range []struct{ in, out string }{

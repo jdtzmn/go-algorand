@@ -75,6 +75,7 @@ func checkListLen(t *testing.T, l dataList, len int) bool {
 }
 
 func TestRemoveFromListAD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedAccountList()
 	e1 := l.pushFront(&persistedAccountData{addr: basics.Address{1}})
@@ -89,6 +90,7 @@ func TestRemoveFromListAD(t *testing.T) {
 }
 
 func TestAddingNewNodeWithAllocatedFreeListAD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedAccountList().allocateFreeNodes(10)
 	checkListPointersAD(t, l, []*persistedAccountDataListNode{})
@@ -163,6 +165,7 @@ func pointerInspection(t *testing.T, es []dataListNode, root dataListNode) {
 }
 
 func TestMultielementListPositioningAD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedAccountList()
 	checkListPointersAD(t, l, []*persistedAccountDataListNode{})
@@ -222,6 +225,7 @@ func TestMultielementListPositioningAD(t *testing.T) {
 }
 
 func TestSingleElementListPositioningAD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedAccountList()
 	checkListPointersAD(t, l, []*persistedAccountDataListNode{})
@@ -234,6 +238,7 @@ func TestSingleElementListPositioningAD(t *testing.T) {
 }
 
 func TestRemovedNodeShouldBeMovedToFreeListAD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedAccountList()
 	e1 := l.pushFront(&persistedAccountData{addr: basics.Address{1}})

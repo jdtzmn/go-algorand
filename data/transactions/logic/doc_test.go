@@ -47,6 +47,7 @@ func TestOpDocs(t *testing.T) {
 // TestDocStragglers confirms that we don't have any docs laying
 // around for non-existent opcodes, most likely from a rename.
 func TestDocStragglers(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for op := range opDocExtras {

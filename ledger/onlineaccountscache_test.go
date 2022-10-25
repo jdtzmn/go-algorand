@@ -30,6 +30,7 @@ import (
 )
 
 func TestOnlineAccountsCacheBasic(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -95,6 +96,7 @@ func TestOnlineAccountsCacheBasic(t *testing.T) {
 }
 
 func TestOnlineAccountsCachePruneOffline(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -129,6 +131,7 @@ func TestOnlineAccountsCachePruneOffline(t *testing.T) {
 }
 
 func TestOnlineAccountsCacheMaxEntries(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var oac onlineAccountsCache

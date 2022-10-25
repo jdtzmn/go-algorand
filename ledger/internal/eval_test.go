@@ -56,6 +56,7 @@ func init() {
 }
 
 func TestBlockEvaluatorFeeSink(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisInitState, _, _ := ledgertesting.Genesis(10)
@@ -179,6 +180,7 @@ ok:
 // commitToParent -> applyChild copies child's cow state usage counts into parent
 // and the usage counts correctly propagated from parent cow to child cow and back
 func TestEvalAppStateCountsWithTxnGroup(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, _, err := testEvalAppGroup(t, basics.StateSchema{NumByteSlice: 1})
@@ -189,6 +191,7 @@ func TestEvalAppStateCountsWithTxnGroup(t *testing.T) {
 // TestEvalAppAllocStateWithTxnGroup ensures roundCowState.deltas and applyStorageDelta
 // produce correct results when a txn group has storage allocate and storage update actions
 func TestEvalAppAllocStateWithTxnGroup(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	eval, addr, err := testEvalAppGroup(t, basics.StateSchema{NumByteSlice: 2})
@@ -201,6 +204,7 @@ func TestEvalAppAllocStateWithTxnGroup(t *testing.T) {
 }
 
 func TestCowStateProof(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var spType protocol.StateProofType
@@ -278,6 +282,7 @@ func TestCowStateProof(t *testing.T) {
 // a couple trivial tests that don't need setup
 // see TestBlockEvaluator for more
 func TestTestTransactionGroup(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var txgroup []transactions.SignedTxn
@@ -294,6 +299,7 @@ func TestTestTransactionGroup(t *testing.T) {
 // test BlockEvaluator.transactionGroup()
 // some trivial checks that require no setup
 func TestPrivateTransactionGroup(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var txgroup []transactions.SignedTxnWithAD
@@ -310,6 +316,7 @@ func TestPrivateTransactionGroup(t *testing.T) {
 // BlockEvaluator.workaroundOverspentRewards() fixed a couple issues on testnet.
 // This is now part of history and has to be re-created when running catchup on testnet. So, test to ensure it keeps happenning.
 func TestTestnetFixup(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	eval := &BlockEvaluator{}
@@ -775,6 +782,7 @@ func (l *testCowBaseLedger) GetCreatorForRound(_ basics.Round, cindex basics.Cre
 }
 
 func TestCowBaseCreatorsCache(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	addresses := make([]basics.Address, 3)
@@ -818,6 +826,7 @@ func TestCowBaseCreatorsCache(t *testing.T) {
 
 // TestEvalFunctionForExpiredAccounts tests that the eval function will correctly mark accounts as offline
 func TestEvalFunctionForExpiredAccounts(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisInitState, addrs, keys := ledgertesting.GenesisWithProto(10, protocol.ConsensusFuture)
@@ -962,6 +971,7 @@ func (p *failRoundCowParent) lookup(basics.Address) (ledgercore.AccountData, err
 
 // TestExpiredAccountGenerationWithDiskFailure tests edge cases where disk failures can lead to ledger look up failures
 func TestExpiredAccountGenerationWithDiskFailure(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisInitState, addrs, keys := ledgertesting.GenesisWithProto(10, protocol.ConsensusFuture)
@@ -1051,6 +1061,7 @@ func TestExpiredAccountGenerationWithDiskFailure(t *testing.T) {
 
 // TestExpiredAccountGeneration test that expired accounts are added to a block header and validated
 func TestExpiredAccountGeneration(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisInitState, addrs, keys := ledgertesting.GenesisWithProto(10, protocol.ConsensusFuture)

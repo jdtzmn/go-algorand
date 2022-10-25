@@ -77,6 +77,7 @@ func TestBucketCycling(t *testing.T) {
 }
 
 func TestGetUnverifiedTransactionGroups50(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	size := 300

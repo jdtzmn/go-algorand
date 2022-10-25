@@ -206,6 +206,7 @@ func testStateProofPKBeingStored(t *testing.T, tx transactions.Transaction, mock
 }
 
 func TestStateProofPKKeyReg(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	secretSrc := keypair()

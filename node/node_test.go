@@ -504,6 +504,7 @@ func TestMismatchingGenesisDirectoryPermissions(t *testing.T) {
 
 // TestOfflineOnlineClosedBitStatus a test that validates that the correct bits are being set
 func TestOfflineOnlineClosedBitStatus(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	tests := []struct {

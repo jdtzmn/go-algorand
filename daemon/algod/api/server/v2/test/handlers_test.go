@@ -415,6 +415,7 @@ func getPendingTransactionsTest(t *testing.T, format string, max uint64, expecte
 }
 
 func TestPendingTransactionLogsEncoding(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	response := generated.PendingTransactionResponse{
@@ -857,6 +858,7 @@ func TestTealDryrun(t *testing.T) {
 }
 
 func TestAppendParticipationKeys(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	mockLedger, _, _, _, releasefunc := testingenv(t, 1, 1, true)
@@ -872,6 +874,7 @@ func TestAppendParticipationKeys(t *testing.T) {
 	id[0] = 10
 
 	t.Run("Happy path", func(t *testing.T) {
+		t.Parallel()
 		// Create test object to append.
 		keys := make(account.StateProofKeys, 2)
 		testKey1 := crypto.FalconSigner{}
@@ -907,6 +910,7 @@ func TestAppendParticipationKeys(t *testing.T) {
 	})
 
 	t.Run("Invalid body", func(t *testing.T) {
+		t.Parallel()
 		// Create request with bogus bytes in the body
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader([]byte{0x99, 0x88, 0x77}))
@@ -923,6 +927,7 @@ func TestAppendParticipationKeys(t *testing.T) {
 	})
 
 	t.Run("Empty body", func(t *testing.T) {
+		t.Parallel()
 		// Create test object with no keys to append.
 		keys := make(account.StateProofKeys, 0)
 		keyBytes := protocol.Encode(keys)
@@ -943,6 +948,7 @@ func TestAppendParticipationKeys(t *testing.T) {
 	})
 
 	t.Run("Internal error", func(t *testing.T) {
+		t.Parallel()
 		// Create mock node with an error.
 		expectedErr := errors.New("expected error")
 		mockNode := makeMockNode(mockLedger, t.Name(), expectedErr)
@@ -998,6 +1004,7 @@ func (tme *TxnMerkleElemRaw) ToBeHashed() (protocol.HashID, []byte) {
 }
 
 func TestGetProofDefault(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 
@@ -1108,6 +1115,7 @@ func insertRounds(a *require.Assertions, h v2.Handlers, numRounds int) {
 }
 
 func TestStateProofNotFound(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1121,6 +1129,7 @@ func TestStateProofNotFound(t *testing.T) {
 }
 
 func TestStateProofHigherRoundThanLatest(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -1132,6 +1141,7 @@ func TestStateProofHigherRoundThanLatest(t *testing.T) {
 }
 
 func TestStateProof200(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1150,6 +1160,7 @@ func TestStateProof200(t *testing.T) {
 }
 
 func TestHeaderProofRoundTooHigh(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -1161,6 +1172,7 @@ func TestHeaderProofRoundTooHigh(t *testing.T) {
 }
 
 func TestHeaderProofStateProofNotFound(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1174,6 +1186,7 @@ func TestHeaderProofStateProofNotFound(t *testing.T) {
 }
 
 func TestGetBlockProof200(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1198,6 +1211,7 @@ func TestGetBlockProof200(t *testing.T) {
 }
 
 func TestStateproofTransactionForRound(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1235,6 +1249,7 @@ func TestStateproofTransactionForRound(t *testing.T) {
 }
 
 func TestStateproofTransactionForRoundWithoutStateproofs(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1257,6 +1272,7 @@ func TestStateproofTransactionForRoundWithoutStateproofs(t *testing.T) {
 }
 
 func TestStateproofTransactionForRoundTimeouts(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1280,6 +1296,7 @@ func TestStateproofTransactionForRoundTimeouts(t *testing.T) {
 }
 
 func TestStateproofTransactionForRoundShutsDown(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

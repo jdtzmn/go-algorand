@@ -53,6 +53,7 @@ func checkListPointersRD(t *testing.T, l *persistedResourcesDataList, es []*pers
 }
 
 func TestRemoveFromListRD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedResourcesList()
 	e1 := l.pushFront(&cachedResourceData{address: basics.Address{1}})
@@ -67,6 +68,7 @@ func TestRemoveFromListRD(t *testing.T) {
 }
 
 func TestAddingNewNodeWithAllocatedFreeListRD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedResourcesList().allocateFreeNodes(10)
 	checkListPointersRD(t, l, []*persistedResourcesDataListNode{})
@@ -85,6 +87,7 @@ func TestAddingNewNodeWithAllocatedFreeListRD(t *testing.T) {
 }
 
 func TestMultielementListPositioningRD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedResourcesList()
 	checkListPointersRD(t, l, []*persistedResourcesDataListNode{})
@@ -144,6 +147,7 @@ func TestMultielementListPositioningRD(t *testing.T) {
 }
 
 func TestSingleElementListPositioningRD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedResourcesList()
 	checkListPointersRD(t, l, []*persistedResourcesDataListNode{})
@@ -156,6 +160,7 @@ func TestSingleElementListPositioningRD(t *testing.T) {
 }
 
 func TestRemovedNodeShouldBeMovedToFreeListRD(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedResourcesList()
 	e1 := l.pushFront(&cachedResourceData{address: basics.Address{1}})

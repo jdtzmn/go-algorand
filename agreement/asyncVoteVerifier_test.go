@@ -37,6 +37,7 @@ func (fp *expiredExecPool) EnqueueBacklog(enqueueCtx context.Context, t execpool
 
 // Test async vote verifier against a full execution pool.
 func TestVerificationAgainstFullExecutionPool(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	mainPool := execpool.MakePool(t)
 	defer mainPool.Shutdown()

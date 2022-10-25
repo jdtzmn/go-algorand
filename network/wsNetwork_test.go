@@ -306,6 +306,7 @@ func TestWebsocketNetworkBasic(t *testing.T) {
 
 // Set up two nodes, send proposal
 func TestWebsocketProposalPayloadCompression(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	type testDef struct {
@@ -1995,6 +1996,7 @@ func TestWebsocketNetworkMessageOfInterest(t *testing.T) {
 // * wn.config.ForceRelayMessages
 // * NodeInfo.IsParticipating() + WebsocketNetwork.OnNetworkAdvance()
 func TestWebsocketNetworkTXMessageOfInterestRelay(t *testing.T) {
+	t.Parallel()
 	// Tests that A->B follows MOI
 	partitiontest.PartitionTest(t)
 
@@ -2079,6 +2081,7 @@ func TestWebsocketNetworkTXMessageOfInterestRelay(t *testing.T) {
 }
 
 func TestWebsocketNetworkTXMessageOfInterestForceTx(t *testing.T) {
+	t.Parallel()
 	// Tests that A->B follows MOI
 	partitiontest.PartitionTest(t)
 
@@ -2162,6 +2165,7 @@ func TestWebsocketNetworkTXMessageOfInterestForceTx(t *testing.T) {
 	incomingMsgSync.Unlock()
 }
 func TestWebsocketNetworkTXMessageOfInterestNPN(t *testing.T) {
+	t.Parallel()
 	// Tests that A->B follows MOI
 	partitiontest.PartitionTest(t)
 
@@ -2266,6 +2270,7 @@ func (nnni *participatingNodeInfo) IsParticipating() bool {
 }
 
 func TestWebsocketNetworkTXMessageOfInterestPN(t *testing.T) {
+	t.Parallel()
 	// Tests that A->B follows MOI
 	partitiontest.PartitionTest(t)
 
@@ -2688,6 +2693,7 @@ func TestParseHostOrURL(t *testing.T) {
 }
 
 func TestPreparePeerData(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// no comression

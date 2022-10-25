@@ -47,6 +47,7 @@ func commitRoundNext(l *Ledger) {
 // TestTrackerScheduleCommit checks catchpointTracker.produceCommittingTask does not increase commit offset relative
 // to the value set by accountUpdates
 func TestTrackerScheduleCommit(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -216,6 +217,7 @@ func (bt *producePrepareBlockingTracker) reset() {
 // 5. Resume produceCommittingTask
 // 6. The data race and panic happens in block queue syncher thread
 func TestTrackerDbRoundDataRace(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	t.Skip("For manual run when touching ledger locking")

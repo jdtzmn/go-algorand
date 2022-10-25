@@ -174,6 +174,7 @@ func TestMetricCounterMixed(t *testing.T) {
 }
 
 func TestCounterWriteMetric(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	c := MakeCounter(MetricName{Name: "testname", Description: "testhelp"})

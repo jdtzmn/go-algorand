@@ -29,6 +29,7 @@ import (
 )
 
 func TestConvertSha256Header(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -46,6 +47,7 @@ func TestConvertSha256Header(t *testing.T) {
 }
 
 func TestFirstFieldsAreCommitteeSeed(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

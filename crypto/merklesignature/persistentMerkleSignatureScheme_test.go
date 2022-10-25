@@ -30,6 +30,7 @@ import (
 )
 
 func TestSecretsDatabaseUpgrade(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	store := createTestDB(a)
@@ -63,6 +64,7 @@ func TestSecretsDatabaseUpgrade(t *testing.T) {
 }
 
 func TestFetchRestoreAllSecrets(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	store := createTestDB(a)

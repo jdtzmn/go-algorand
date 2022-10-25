@@ -72,6 +72,7 @@ func makeRandomOnlineAccounts(numberOfAccounts uint64) map[basics.Address]basics
 }
 
 func TestVoterTrackerDeleteVotersAfterStateproofConfirmed(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -143,6 +144,7 @@ func TestVoterTrackerDeleteVotersAfterStateproofConfirmed(t *testing.T) {
 }
 
 func TestLimitVoterTracker(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -231,6 +233,7 @@ func TestLimitVoterTracker(t *testing.T) {
 }
 
 func TestTopNAccountsThatHaveNoMssKeys(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

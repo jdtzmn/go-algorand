@@ -28,6 +28,7 @@ import (
 )
 
 func TestGenesis_Balances(t *testing.T) {
+	t.Parallel()
 	partitiontest.PartitionTest(t)
 	containsErrorFunc := func(str string) assert.ErrorAssertionFunc {
 		return func(_ assert.TestingT, err error, i ...interface{}) bool {
