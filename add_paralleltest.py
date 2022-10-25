@@ -9,9 +9,20 @@ def is_paralleltest_line(line: str):
     indicator_substring = "(paralleltest)"
     return indicator_substring in line
 
-def is_fixable(line: str):
-    unfixable_substrings = ["has missing the call to method parallel"]
-    return all(unfixable_substring not in line for unfixable_substring in unfixable_substrings)
+def is_fixable(lines: list[str], index: int):
+    message_line = lines[index]
+    code_line = lines[index + 1]
+
+    # Lines which start with `t.Run` and don't end with `func(t *testing.T) {` are not easily fixable
+    if code_line.strip().startswith("t.Run") and not code_line.strip().endswith("func(t *testing.T) {"):
+        return False
+
+    # Cannot easily fix range errors where t.Run could be anywhere within the body
+    if "missing the call to method parallel in test Run" in message_line:
+        return False
+
+    # Always default to returning True
+    return True
 
 
 def extract_file_path_and_line(line: str):
@@ -29,8 +40,8 @@ def parse_log_file(log_file):
     # Line numbers correspond to the test's function declaration.
     preprocessed = {}
 
-    for line in lines:
-        if is_paralleltest_line(line) and is_fixable(line):
+    for i, line in enumerate(lines):
+        if is_paralleltest_line(line) and is_fixable(lines, i):
             file, line_number = extract_file_path_and_line(line)
             processed_lines = preprocessed.setdefault(file, set())
             processed_lines.add(int(line_number))
