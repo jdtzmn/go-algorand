@@ -964,9 +964,7 @@ func TestBigApplCreation(t *testing.T) {
 
 	// First, test normal accummulation
 	for _, pgm := range []string{"Approval", "ClearState"} {
-		pgm := pgm
 		t.Run(pgm, func(t *testing.T) {
-			t.Parallel()
 			basic := "itxn_field " + pgm + "Program"
 			pages := "itxn_field " + pgm + "ProgramPages"
 			TestApp(t, p+`int 1000; bzero; `+pages+`

@@ -133,9 +133,7 @@ func TestParseMethodArgJSONtoByteSlice(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		test := test
 		t.Run(fmt.Sprintf("index=%d", i), func(t *testing.T) {
-			t.Parallel()
 			applicationArgs := [][]byte{}
 			err := parseMethodArgJSONtoByteSlice(test.argTypes, test.jsonArgs, &applicationArgs)
 			require.NoError(t, err)

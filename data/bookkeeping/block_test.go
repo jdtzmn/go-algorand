@@ -581,9 +581,7 @@ func TestNextRewardsRateWithFix(t *testing.T) {
 			proto.MinBalance + 500000000000 /* 5*10^11 */, 1, 1000000, false},
 	}
 	for _, test := range tests {
-		test := test
 		t.Run(test.name, func(t *testing.T) {
-			t.Parallel()
 			curRewardsState := RewardsState{
 				RewardsLevel:              test.rewardsLevel,
 				RewardsResidue:            test.rewardsResidue,

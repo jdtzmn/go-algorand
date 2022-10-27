@@ -1256,9 +1256,7 @@ int 1`
 	}
 
 	for _, test := range tests {
-		test := test
 		t.Run(fmt.Sprintf("fee=%d", test.fee), func(t *testing.T) {
-			t.Parallel()
 
 			stxn.Txn.Fee = basics.MicroAlgos{Raw: test.fee}
 			encoded := protocol.EncodeJSON(&stxn)
@@ -1383,9 +1381,7 @@ byte 0x5ce9454909639d2d17a3f753ce7d93fa0b9ab12e // addr
 		}},
 	}
 	for _, test := range tests {
-		test := test
 		t.Run(fmt.Sprintf("txn-count=%d", test.additionalApps+1), func(t *testing.T) {
-			t.Parallel()
 			txnBlob := protocol.EncodeMsgp(&stxn)
 			for i := 0; i < test.additionalApps; i++ {
 				val, err := getRandomAddress()

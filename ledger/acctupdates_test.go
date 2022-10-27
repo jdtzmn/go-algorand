@@ -453,7 +453,6 @@ func checkOnlineAcctUpdatesConsistency(t *testing.T, ao *onlineAccounts, rnd bas
 }
 
 func TestAcctUpdates(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	if runtime.GOARCH == "arm" || runtime.GOARCH == "arm64" {
@@ -468,9 +467,7 @@ func TestAcctUpdates(t *testing.T) {
 
 	conf := config.GetDefaultLocal()
 	for _, lookback := range []uint64{conf.MaxAcctLookback, proto.MaxBalLookback} {
-		lookback := lookback
 		t.Run(fmt.Sprintf("lookback=%d", lookback), func(t *testing.T) {
-			t.Parallel()
 
 			conf.MaxAcctLookback = lookback
 

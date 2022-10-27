@@ -337,9 +337,7 @@ byte 0x%s
 		{pkTampered2, false},
 	}
 	for i, test := range decompressTests {
-		i, test := i, test
 		t.Run(fmt.Sprintf("decompress/pass=%v", test.pass), func(t *testing.T) {
-			t.Parallel()
 			t.Log("decompressTests i", i)
 			src := fmt.Sprintf(source, hex.EncodeToString(test.key), hex.EncodeToString(x), hex.EncodeToString(y))
 			if test.pass {
@@ -383,9 +381,7 @@ ecdsa_verify Secp256k1
 		{"testdata1", r, false},
 	}
 	for _, test := range verifyTests {
-		test := test
 		t.Run(fmt.Sprintf("verify/pass=%v", test.pass), func(t *testing.T) {
-			t.Parallel()
 			src := fmt.Sprintf(source, test.data, hex.EncodeToString(test.r), hex.EncodeToString(s), hex.EncodeToString(x), hex.EncodeToString(y))
 			if test.pass {
 				testAccepts(t, src, 5)
@@ -432,9 +428,7 @@ load 1
 	pkExpanded := secp256k1.S256().Marshal(key.PublicKey.X, key.PublicKey.Y)
 
 	for i, test := range recoverTests {
-		i, test := i, test
 		t.Run(fmt.Sprintf("recover/%d", i), func(t *testing.T) {
-			t.Parallel()
 			src := fmt.Sprintf(source, hex.EncodeToString(msg[:]), test.v, hex.EncodeToString(r), hex.EncodeToString(s), hex.EncodeToString(x), hex.EncodeToString(y), hex.EncodeToString(pkExpanded))
 			test.checker(t, src, 5)
 		})
@@ -493,9 +487,7 @@ byte 0x%s
 		{pkTampered2, false},
 	}
 	for i, test := range decompressTests {
-		i, test := i, test
 		t.Run(fmt.Sprintf("decompress/pass=%v", test.pass), func(t *testing.T) {
-			t.Parallel()
 			t.Log("decompressTests i", i)
 			src := fmt.Sprintf(source, hex.EncodeToString(test.key), hex.EncodeToString(x), hex.EncodeToString(y))
 			if test.pass {
@@ -538,9 +530,7 @@ ecdsa_verify Secp256r1
 		{"testdata1", r, false},
 	}
 	for _, test := range verifyTests {
-		test := test
 		t.Run(fmt.Sprintf("verify/pass=%v", test.pass), func(t *testing.T) {
-			t.Parallel()
 			src := fmt.Sprintf(source, test.data, hex.EncodeToString(test.r), hex.EncodeToString(s), hex.EncodeToString(x), hex.EncodeToString(y))
 			if test.pass {
 				testAccepts(t, src, fidoVersion)

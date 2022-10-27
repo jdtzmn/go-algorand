@@ -345,11 +345,7 @@ func TestCallStackControl(t *testing.T) {
 	}
 
 	for name, f := range cases {
-		f := f
-		t.Run(name, func (t *testing.T) {
-			t.Parallel()
-			f(t)
-		})
+		t.Run(name, f)
 	}
 }
 

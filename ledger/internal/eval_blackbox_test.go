@@ -511,10 +511,8 @@ func TestEvalAppPooledBudgetWithTxnGroup(t *testing.T) {
 	}
 
 	for i, param := range params {
-		param := param
 		for j, testCase := range cases {
 			t.Run(fmt.Sprintf("i=%d,j=%d", i, j), func(t *testing.T) {
-				t.Parallel()
 				err := testEvalAppPoolingGroup(t, basics.StateSchema{NumByteSlice: 3}, testCase.prog, param)
 				if !testCase.isSuccessV29 && reflect.DeepEqual(param, protocol.ConsensusV29) {
 					require.Error(t, err)

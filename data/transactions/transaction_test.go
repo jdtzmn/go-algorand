@@ -252,9 +252,7 @@ func TestAppCallCreateWellFormed(t *testing.T) {
 		},
 	}
 	for i, usecase := range usecases {
-		usecase := usecase
 		t.Run(fmt.Sprintf("i=%d", i), func(t *testing.T) {
-			t.Parallel()
 			err := usecase.tx.WellFormed(SpecialAddresses{FeeSink: feeSink}, usecase.proto)
 			if usecase.expectedError != "" {
 				require.Error(t, err)

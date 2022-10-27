@@ -1265,9 +1265,7 @@ func TestDryrunCost(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
 		t.Run(test.msg, func(t *testing.T) {
-			t.Parallel()
 			expectedCosts := make([]int64, 3)
 			expectedBudgetAdded := make([]uint64, 3)
 

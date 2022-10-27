@@ -1224,9 +1224,7 @@ intc_1
 		"delete": {sourceDelete, 12},
 	}
 	for name, cmdtest := range tests {
-		name, cmdtest := name, cmdtest
 		t.Run(fmt.Sprintf("test=%s", name), func(t *testing.T) {
-			t.Parallel()
 			source := cmdtest.source
 			firstCmdOffset := cmdtest.accNumOffset
 
@@ -2411,7 +2409,6 @@ func TestReturnTypes(t *testing.T) {
 
 	byName := OpsByName[LogicVersion]
 	for _, m := range []runMode{modeSig, modeApp} {
-		m := m
 		for name, spec := range byName {
 			// Only try an opcode in its modes
 			if (m & spec.Modes) == 0 {
@@ -2421,7 +2418,6 @@ func TestReturnTypes(t *testing.T) {
 				continue
 			}
 			t.Run(fmt.Sprintf("mode=%s,opcode=%s", m, name), func(t *testing.T) {
-				t.Parallel()
 				provideStackInput := true
 				cmd := name
 				if special, ok := specialCmd[name]; ok {

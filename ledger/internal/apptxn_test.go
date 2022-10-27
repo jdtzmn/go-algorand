@@ -2780,9 +2780,7 @@ func TestClearStateInnerPay(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		test := test
 		t.Run(fmt.Sprintf("i=%d", i), func(t *testing.T) {
-			t.Parallel()
 
 			genBalances, addrs, _ := ledgertesting.NewTestGenesis()
 			l := newTestLedgerWithConsensusVersion(t, genBalances, test.consensus)

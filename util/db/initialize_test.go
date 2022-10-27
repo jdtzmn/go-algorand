@@ -201,9 +201,7 @@ func TestNewDBFlag(t *testing.T) {
 	}
 
 	for _, testcase := range testcases {
-		testcase := testcase
 		t.Run(testcase.name, func(t *testing.T) {
-			t.Parallel()
 			accessor, err := MakeAccessor("test_"+testcase.name, false, true)
 			require.NoError(t, err)
 			defer accessor.Close()

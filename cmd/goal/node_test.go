@@ -84,9 +84,7 @@ func TestGetMissingCatchpointLabel(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
 		t.Run(test.name, func(t *testing.T) {
-			t.Parallel()
 			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, test.expectedErr, test.statusCode)
 			}))
