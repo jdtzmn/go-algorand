@@ -29,7 +29,6 @@ import (
 )
 
 func TestBlockHeaderCache(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -66,7 +65,6 @@ func TestBlockHeaderCache(t *testing.T) {
 }
 
 func TestLatestBlockHeaderCache(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -89,7 +87,6 @@ func TestLatestBlockHeaderCache(t *testing.T) {
 }
 
 func TestCacheSizeConsensus(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

@@ -28,7 +28,6 @@ import (
 )
 
 func TestZstdDecompress(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// happy case - small message
@@ -50,7 +49,6 @@ func TestZstdDecompress(t *testing.T) {
 }
 
 func TestCheckCanCompress(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	req := broadcastRequest{}
@@ -82,7 +80,6 @@ func TestCheckCanCompress(t *testing.T) {
 }
 
 func TestZstdCompressMsg(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ppt := len(protocol.ProposalPayloadTag)
@@ -108,7 +105,6 @@ func (cl *converterTestLogger) Warnf(s string, args ...interface{}) {
 }
 
 func TestWsPeerMsgDataConverterConvert(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	c := wsPeerMsgDataConverter{}

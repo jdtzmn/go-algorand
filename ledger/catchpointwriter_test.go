@@ -274,7 +274,6 @@ func TestBasicCatchpointWriter(t *testing.T) {
 }
 
 func TestFullCatchpointWriter(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback
@@ -411,7 +410,6 @@ func TestFullCatchpointWriter(t *testing.T) {
 }
 
 func TestCatchpointReadDatabaseOverflowSingleAccount(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback
@@ -499,7 +497,6 @@ func TestCatchpointReadDatabaseOverflowSingleAccount(t *testing.T) {
 }
 
 func TestCatchpointReadDatabaseOverflowAccounts(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback
@@ -584,7 +581,6 @@ func TestCatchpointReadDatabaseOverflowAccounts(t *testing.T) {
 }
 
 func TestFullCatchpointWriterOverflowAccounts(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// create new protocol version, which has lower lookback

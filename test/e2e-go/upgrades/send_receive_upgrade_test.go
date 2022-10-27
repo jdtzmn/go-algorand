@@ -79,7 +79,6 @@ func TestAccountsCanSendMoneyAcrossUpgradeV24toV25(t *testing.T) {
 }
 
 func TestAccountsCanSendMoneyAcrossUpgradeV32toV35(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 

@@ -60,7 +60,6 @@ func TestConsensusUpgradeWindow(t *testing.T) {
 }
 
 func TestConsensusStateProofParams(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for _, params := range Consensus {

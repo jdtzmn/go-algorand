@@ -391,7 +391,6 @@ func BenchmarkCryptoVerifierBundleVertification(b *testing.B) {
 // TestCryptoVerifierVerificationFailures tests to see that the cryptoVerifier.VerifyVote returns an error in the vote response
 // when being unable to enqueue a vote.
 func TestCryptoVerifierVerificationFailures(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	mainPool := execpool.MakePool(t)

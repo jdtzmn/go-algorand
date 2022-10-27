@@ -188,7 +188,6 @@ func BenchmarkOldKeysDeletion(b *testing.B) {
 }
 
 func TestRetrieveFromDB(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	part, rootDB, partDB, err := setupParticipationKey(t, a)
@@ -205,7 +204,6 @@ func TestRetrieveFromDB(t *testing.T) {
 }
 
 func TestRetrieveFromDBAtVersion1(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -228,7 +226,6 @@ func TestRetrieveFromDBAtVersion1(t *testing.T) {
 }
 
 func TestRetrieveFromDBAtVersion2(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -258,7 +255,6 @@ func TestRetrieveFromDBAtVersion2(t *testing.T) {
 }
 
 func TestKeyRegCreation(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -292,7 +288,6 @@ func assertionForRestoringFromDBAtLowVersion(a *require.Assertions, retrivedPart
 }
 
 func TestMigrateFromVersion1(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -308,7 +303,6 @@ func TestMigrateFromVersion1(t *testing.T) {
 }
 
 func TestMigrationFromVersion2(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -503,7 +497,6 @@ func createMerkleSignatureSchemeTestDB(a *require.Assertions) *db.Accessor {
 }
 
 func TestKeyregValidityOverLimit(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -522,7 +515,6 @@ func TestKeyregValidityOverLimit(t *testing.T) {
 }
 
 func TestFillDBWithParticipationKeys(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -540,7 +532,6 @@ func TestFillDBWithParticipationKeys(t *testing.T) {
 }
 
 func TestKeyregValidityPeriod(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

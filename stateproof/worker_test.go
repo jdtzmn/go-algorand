@@ -285,7 +285,6 @@ func newPartKey(t testing.TB, parent basics.Address) account.PersistedParticipat
 }
 
 func TestWorkerAllSigs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var keys []account.Participation
@@ -355,7 +354,6 @@ func TestWorkerAllSigs(t *testing.T) {
 }
 
 func TestWorkerPartialSigs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var keys []account.Participation
@@ -421,7 +419,6 @@ func TestWorkerPartialSigs(t *testing.T) {
 }
 
 func TestWorkerInsufficientSigs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var keys []account.Participation
@@ -456,7 +453,6 @@ func TestWorkerInsufficientSigs(t *testing.T) {
 }
 
 func TestWorkerRestart(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var keys []account.Participation
@@ -500,7 +496,6 @@ func TestWorkerRestart(t *testing.T) {
 }
 
 func TestWorkerHandleSig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var keys []account.Participation
@@ -536,7 +531,6 @@ func TestWorkerHandleSig(t *testing.T) {
 }
 
 func TestSignerDeletesUnneededStateProofKeys(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var keys []account.Participation
@@ -564,7 +558,6 @@ func TestSignerDeletesUnneededStateProofKeys(t *testing.T) {
 }
 
 func TestSignerDoesntDeleteKeysWhenDBDoesntStoreSigs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var keys []account.Participation
@@ -602,7 +595,6 @@ func TestSignerDoesntDeleteKeysWhenDBDoesntStoreSigs(t *testing.T) {
 }
 
 func TestWorkerRemoveBuildersAndSignatures(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -660,7 +652,6 @@ func TestWorkerRemoveBuildersAndSignatures(t *testing.T) {
 }
 
 func TestWorkerBuildersRecoveryLimit(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -842,7 +833,6 @@ func getSignaturesInDatabase(t *testing.T, numAddresses int, sigFrom sigOrigin) 
 // makes sure each account has 2 sigs sent per period if originated locally, and 1 sig
 // if received from another relay.
 func TestSigBroacastTwoPerSig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	signatureBcasted, fromThisNode, tns, spw := getSignaturesInDatabase(t, 10, sigAlternateOrigin)
 
@@ -894,7 +884,6 @@ func sendReceiveCountMessages(t *testing.T, tns *testWorkerStubs, signatureBcast
 }
 
 func TestBuilderGeneratesValidStateProofTXN(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -932,7 +921,6 @@ func TestBuilderGeneratesValidStateProofTXN(t *testing.T) {
 // TestForwardNotFromThisNodeSecondHalf tests that relays forward
 // signatures from other nodes only in the second half of the period
 func TestForwardNotFromThisNodeSecondHalf(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, _, tns, spw := getSignaturesInDatabase(t, 10, sigNotFromThisNode)
@@ -952,7 +940,6 @@ func TestForwardNotFromThisNodeSecondHalf(t *testing.T) {
 // TestForwardNotFromThisNodeFirstHalf tests that relays forward
 // signatures in the first half of the period only if it is from this node
 func TestForwardNotFromThisNodeFirstHalf(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	signatureBcasted, fromThisNode, tns, spw := getSignaturesInDatabase(t, 10, sigAlternateOrigin)
@@ -1010,7 +997,6 @@ func setBlocksAndMessage(t *testing.T, sigRound basics.Round) (s *testWorkerStub
 
 // relays reject signatures for old rounds (before stateproofNext) not disconnect
 func TestWorkerHandleSigOldRounds(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1029,7 +1015,6 @@ func TestWorkerHandleSigOldRounds(t *testing.T) {
 
 // relays reject signatures for a round not in ledger
 func TestWorkerHandleSigRoundNotInLedger(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1053,7 +1038,6 @@ func TestWorkerHandleSigRoundNotInLedger(t *testing.T) {
 
 // relays reject signatures for wrong message (sig verification fails)
 func TestWorkerHandleSigWrongSignature(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1075,7 +1059,6 @@ func TestWorkerHandleSigWrongSignature(t *testing.T) {
 
 // relays reject signatures for address not in top N
 func TestWorkerHandleSigAddrsNotInTopN(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1121,7 +1104,6 @@ func TestWorkerHandleSigAddrsNotInTopN(t *testing.T) {
 
 // Signature already part of the builderForRound, ignore
 func TestWorkerHandleSigAlreadyIn(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1165,7 +1147,6 @@ func TestWorkerHandleSigAlreadyIn(t *testing.T) {
 
 // Ignore on db internal error and report error
 func TestWorkerHandleSigExceptionsDbError(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1195,7 +1176,6 @@ func TestWorkerHandleSigExceptionsDbError(t *testing.T) {
 
 // relays reject signatures when could not makeBuilderForRound
 func TestWorkerHandleSigCantMakeBuilder(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1244,7 +1224,6 @@ func TestWorkerHandleSigCantMakeBuilder(t *testing.T) {
 
 // relays reject signiture for a round where StateProofInterval is 0
 func TestWorkerHandleSigIntervalZero(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1272,7 +1251,6 @@ func TestWorkerHandleSigIntervalZero(t *testing.T) {
 
 // relays reject signiture for a round not multiple of StateProofInterval
 func TestWorkerHandleSigNotOnInterval(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -1292,7 +1270,6 @@ func TestWorkerHandleSigNotOnInterval(t *testing.T) {
 
 // relays handle corrupt message
 func TestWorkerHandleSigCorrupt(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var address basics.Address

@@ -176,7 +176,6 @@ func (s *workerForStateProofMessageTests) advanceLatest(delta uint64) {
 }
 
 func TestStateProofMessage(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -251,7 +250,6 @@ func verifySha256BlockHeadersCommitments(a *require.Assertions, message statepro
 }
 
 func TestGenerateStateProofMessageForSmallRound(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -274,7 +272,6 @@ func TestGenerateStateProofMessageForSmallRound(t *testing.T) {
 }
 
 func TestMessageLnApproxError(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -303,7 +300,6 @@ func TestMessageLnApproxError(t *testing.T) {
 }
 
 func TestMessageMissingHeaderOnInterval(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -329,7 +325,6 @@ func TestMessageMissingHeaderOnInterval(t *testing.T) {
 }
 
 func TestGenerateBlockProof(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -386,7 +381,6 @@ func TestGenerateBlockProof(t *testing.T) {
 }
 
 func TestGenerateBlockProofOnSmallArray(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

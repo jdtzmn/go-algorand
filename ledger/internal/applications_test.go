@@ -169,7 +169,6 @@ func newCowMock(creatables []modsData) *mockCowForLogicLedger {
 }
 
 func TestLogicLedgerMake(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -181,7 +180,6 @@ func TestLogicLedgerMake(t *testing.T) {
 }
 
 func TestLogicLedgerBalances(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -199,7 +197,6 @@ func TestLogicLedgerBalances(t *testing.T) {
 }
 
 func TestLogicLedgerGetters(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -224,7 +221,6 @@ func TestLogicLedgerGetters(t *testing.T) {
 }
 
 func TestLogicLedgerAsset(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -270,7 +266,6 @@ func TestLogicLedgerAsset(t *testing.T) {
 }
 
 func TestLogicLedgerGetKey(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -313,7 +308,6 @@ func TestLogicLedgerGetKey(t *testing.T) {
 }
 
 func TestLogicLedgerSetKey(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -343,7 +337,6 @@ func TestLogicLedgerSetKey(t *testing.T) {
 }
 
 func TestLogicLedgerDelKey(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)

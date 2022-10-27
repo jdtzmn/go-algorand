@@ -27,7 +27,6 @@ import (
 )
 
 func TestEvalDeltaEqual(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -200,7 +199,6 @@ func TestEvalDeltaEqual(t *testing.T) {
 // that take advnatage of a new, bigger bound. (Or, if the bound is *lowered* it
 // had better be the case that such messages cannot be emitted in old code.)
 func TestUnchangedAllocBounds(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	delta := &EvalDelta{}

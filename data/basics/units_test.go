@@ -36,7 +36,6 @@ func TestSubSaturate(t *testing.T) {
 }
 
 func TestSubSaturate32(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	require.Equal(t, uint32(0), SubSaturate32(0, 1))
@@ -48,7 +47,6 @@ func TestSubSaturate32(t *testing.T) {
 }
 
 func TestAddSaturate32(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	require.Equal(t, uint32(1), AddSaturate32(0, 1))

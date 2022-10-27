@@ -30,7 +30,6 @@ import (
 )
 
 func TestFetchBlock(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ledger, next, b, err := buildTestLedger(t, bookkeeping.Block{})
@@ -75,7 +74,6 @@ func TestFetchBlock(t *testing.T) {
 }
 
 func TestConcurrentAttemptsToFetchBlockSuccess(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ledger, next, b, err := buildTestLedger(t, bookkeeping.Block{})
@@ -125,7 +123,6 @@ func TestConcurrentAttemptsToFetchBlockSuccess(t *testing.T) {
 }
 
 func TestHTTPPeerNotAvailable(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	net := &httpTestPeerSource{}
@@ -142,7 +139,6 @@ func TestHTTPPeerNotAvailable(t *testing.T) {
 }
 
 func TestFetchBlockFailed(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	net := &httpTestPeerSource{}
@@ -161,7 +157,6 @@ func TestFetchBlockFailed(t *testing.T) {
 }
 
 func TestFetchBlockAuthenticationFailed(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ledger, next, _, err := buildTestLedger(t, bookkeeping.Block{})

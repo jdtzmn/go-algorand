@@ -105,7 +105,6 @@ func (p paymentSender) sendPayment(a *require.Assertions, f *fixtures.RestClient
 const timeoutUntilNextRound = 3 * time.Minute
 
 func TestStateProofs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -127,7 +126,6 @@ func TestStateProofs(t *testing.T) {
 }
 
 func TestStateProofsMultiWallets(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	if strings.ToUpper(os.Getenv("CIRCLECI")) == "TRUE" {
@@ -212,7 +210,6 @@ func verifyStateProofsCreation(t *testing.T, fixture *fixtures.RestClientFixture
 }
 
 func TestStateProofOverlappingKeys(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 	if testing.Short() {
@@ -324,7 +321,6 @@ func TestStateProofOverlappingKeys(t *testing.T) {
 }
 
 func TestStateProofMessageCommitmentVerification(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -462,7 +458,6 @@ func verifyStateProofForRound(r *require.Assertions, fixture *fixtures.RestClien
 // If the missing data is being accepted before  StateProofMaxRecoveryIntervals * StateProofInterval rounds have passed, nodes should
 // be able to produce stateproofs and continue as normal
 func TestRecoverFromLaggingStateProofChain(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -561,7 +556,6 @@ func TestRecoverFromLaggingStateProofChain(t *testing.T) {
 // TestUnableToRecoverFromLaggingStateProofChain simulates a situation where the stateproof chain is lagging after the main chain.
 // unlike TestRecoverFromLaggingStateProofChain, in this test the node will start at a later round and the network will not be able to produce stateproofs/
 func TestUnableToRecoverFromLaggingStateProofChain(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -682,7 +676,6 @@ func registerParticipationAndWait(t *testing.T, client libgoal.Client, part acco
 // rich node to the poor node. For both cases, we assert different stakes, that is, to
 // conclude whether the poor node is used to create the StateProof or the rich node.
 func TestAttestorsChange(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -788,7 +781,6 @@ func TestAttestorsChange(t *testing.T) {
 }
 
 func TestTotalWeightChanges(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -871,7 +863,6 @@ func TestTotalWeightChanges(t *testing.T) {
 
 // TestSPWithTXPoolFull makes sure a SP txn goes into the pool when the pool is full
 func TestSPWithTXPoolFull(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -938,7 +929,6 @@ func TestSPWithTXPoolFull(t *testing.T) {
 // guarantees that no more than 1 SP txn get into a block. In normal configuration, it is
 // possible to have multiple SPs getting into the same block when the pool is full.
 func TestAtMostOneSPFullPool(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -1023,7 +1013,6 @@ func (a specialAddr) ToBeHashed() (protocol.HashID, []byte) {
 // Bad SP and payment transaction traffic is added to increase the odds of getting SP txn into the pool
 // in the same round.
 func TestAtMostOneSPFullPoolWithLoad(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -1175,7 +1164,6 @@ func getWellformedSPTransaction(round uint64, genesisHash crypto.Digest, consens
 }
 
 func TestStateProofCheckTotalStake(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	if strings.ToUpper(os.Getenv("CIRCLECI")) == "TRUE" {

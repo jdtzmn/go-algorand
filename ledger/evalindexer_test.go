@@ -114,7 +114,6 @@ func (il indexerLedgerForEvalImpl) LatestTotals() (totals ledgercore.AccountTota
 
 // Test that overriding the consensus parameters effects the generated apply data.
 func TestEvalForIndexerCustomProtocolParams(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -217,7 +216,6 @@ func TestEvalForIndexerCustomProtocolParams(t *testing.T) {
 
 // TestEvalForIndexerForExpiredAccounts tests that the EvalForIndexer function will correctly mark accounts offline
 func TestEvalForIndexerForExpiredAccounts(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -304,7 +302,6 @@ func newTestLedger(t testing.TB, balances bookkeeping.GenesisBalances) *Ledger {
 
 // Test that preloading data in cow base works as expected.
 func TestResourceCaching(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var address basics.Address

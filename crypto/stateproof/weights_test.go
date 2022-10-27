@@ -26,7 +26,6 @@ import (
 )
 
 func TestMaxNumberOfRevealsInVerify(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -40,7 +39,6 @@ func TestMaxNumberOfRevealsInVerify(t *testing.T) {
 }
 
 func TestMaxNumberOfReveals(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -54,7 +52,6 @@ func TestMaxNumberOfReveals(t *testing.T) {
 }
 
 func TestVerifyProvenWeight(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -74,7 +71,6 @@ func TestVerifyProvenWeight(t *testing.T) {
 }
 
 func TestVerifyZeroNumberOfRevealsEquation(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -88,7 +84,6 @@ func TestVerifyZeroNumberOfRevealsEquation(t *testing.T) {
 }
 
 func TestLnWithPrecision(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -108,7 +103,6 @@ func TestLnWithPrecision(t *testing.T) {
 }
 
 func TestVerifyLimits(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -122,7 +116,6 @@ func TestVerifyLimits(t *testing.T) {
 }
 
 func TestNumRevealsApproxBound(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -167,7 +160,6 @@ func checkRatio(i int, sigWt uint64, secParam uint64) error {
 }
 
 func TestNumReveals(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

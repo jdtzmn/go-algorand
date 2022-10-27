@@ -31,7 +31,6 @@ import (
 // As of go1.10, json implements encoding and decoding of JSON as defined in RFC 7159. https://pkg.go.dev/encoding/json
 
 func TestParseScalar(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	intScalar := `{"key0": 4160}`
 	_, err := parseJSON([]byte(intScalar))
@@ -42,7 +41,6 @@ func TestParseScalar(t *testing.T) {
 }
 
 func TestParseTrailingCommas(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	for i := 1; i <= 10; i++ {
 		commas := strings.Repeat(",", i)
@@ -56,7 +54,6 @@ func TestParseTrailingCommas(t *testing.T) {
 }
 
 func TestParseComments(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	text := `{"key0": /*comment*/"algo"}`
 	_, err := parseJSON([]byte(text))
@@ -67,7 +64,6 @@ func TestParseComments(t *testing.T) {
 }
 
 func TestParseUnclosed(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	text := `{"key0": ["algo"}`
 	_, err := parseJSON([]byte(text))
@@ -87,7 +83,6 @@ func TestParseUnclosed(t *testing.T) {
 }
 
 func TestParseNested(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	text := `{"key0": [[1,2,3],[4,5,6]], "key1":{"key10":{"key100":"algo"}}}`
 	_, err := parseJSON([]byte(text))
@@ -95,7 +90,6 @@ func TestParseNested(t *testing.T) {
 }
 
 func TestParseWhiteSpace(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	//empty text
 	text := ""
@@ -112,7 +106,6 @@ func TestParseWhiteSpace(t *testing.T) {
 }
 
 func TestParseSpecialValues(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	text := `{"key0": NaN}`
 	_, err := parseJSON([]byte(text))
@@ -135,7 +128,6 @@ func TestParseSpecialValues(t *testing.T) {
 }
 
 func TestParseHexValue(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	text := `{"key0": 0x1}`
 	_, err := parseJSON([]byte(text))
@@ -146,7 +138,6 @@ func TestParseHexValue(t *testing.T) {
 }
 
 func TestParseBigNum(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// values in range uint64 parsed correctly
 	// parse 0
@@ -170,7 +161,6 @@ func TestParseBigNum(t *testing.T) {
 }
 
 func TestParseArrays(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	text := `{"key0": [,1,]}`
 	_, err := parseJSON([]byte(text))
@@ -184,7 +174,6 @@ func TestParseArrays(t *testing.T) {
 }
 
 func TestParseKeys(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	text := `{"": 1}`
 	_, err := parseJSON([]byte(text))
@@ -221,7 +210,6 @@ func TestParseKeys(t *testing.T) {
 }
 
 func TestParseFileEncoding(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// create utf-8, utf-16, and utf-32 encoded text and check which is supported by json
 	// it appears that json only supports utf-8 encoded json text
@@ -261,7 +249,6 @@ func TestParseFileEncoding(t *testing.T) {
 }
 
 func TestParseByteOrderMark(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// byte order mark is not allowed at the beginning of a JSON text,
 	// it is treated as an error
@@ -271,7 +258,6 @@ func TestParseByteOrderMark(t *testing.T) {
 }
 
 func TestParseControlChar(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// control chars (u0000 - u001F) must be escaped
 	for i := 0x0; i <= 0x1f; i++ {
@@ -282,7 +268,6 @@ func TestParseControlChar(t *testing.T) {
 }
 
 func TestParseEscapeChar(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// escaped control char
 	text := "{\"key0\": \"\\u0000\"}"
@@ -301,7 +286,6 @@ func TestParseEscapeChar(t *testing.T) {
 }
 
 func TestParseEscapedInvalidChar(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// unicode escape sequence remains in string
 	// accepted surrogate pair
@@ -322,7 +306,6 @@ func TestParseEscapedInvalidChar(t *testing.T) {
 }
 
 func TestParseRawNonUnicodeChar(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	text := `{"key0": "πζθ"}`
 	_, err := parseJSON([]byte(text))

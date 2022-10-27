@@ -27,7 +27,6 @@ import (
 )
 
 func TestVerifyRevelForEachPosition(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -59,7 +58,6 @@ func TestVerifyRevelForEachPosition(t *testing.T) {
 // TestVerifyWrongCoinSlot this test makes sure that the verifier uses PositionsToReveal array, and opens reveals in a specific order
 // In order to and trick the verifier we need to swap two positions in the PositionsToReveal so the coins will not match.
 func TestVerifyWrongCoinSlot(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -104,7 +102,6 @@ func TestVerifyWrongCoinSlot(t *testing.T) {
 }
 
 func TestVerifyBadSignature(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -133,7 +130,6 @@ func TestVerifyBadSignature(t *testing.T) {
 }
 
 func TestVerifyZeroProvenWeight(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -143,7 +139,6 @@ func TestVerifyZeroProvenWeight(t *testing.T) {
 }
 
 func TestEqualVerifiers(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -162,7 +157,6 @@ func TestEqualVerifiers(t *testing.T) {
 }
 
 func TestTreeDepth(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

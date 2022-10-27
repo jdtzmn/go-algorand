@@ -471,7 +471,6 @@ func (lm loggedMessages) Errorf(s string, args ...interface{}) {
 // The purpose here is to simulate the scenario where the catchup and the agreement compete to add blocks to the ledger.
 // The error messages reported can be excessive or unnecessary. This test evaluates what messages are generate and at what frequency.
 func TestLedgerErrorValidate(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var testPoolAddr = basics.Address{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}

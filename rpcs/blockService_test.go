@@ -180,7 +180,6 @@ func TestRedirectFallbackArchiver(t *testing.T) {
 
 // TestBlockServiceShutdown tests that the block service is shutting down correctly.
 func TestBlockServiceShutdown(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	log := logging.TestingLog(t)

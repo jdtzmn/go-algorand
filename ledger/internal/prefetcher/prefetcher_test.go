@@ -201,7 +201,6 @@ func getPrefetcherTestLedger(rnd basics.Round) *prefetcherTestLedger {
 }
 
 func TestEvaluatorPrefetcher(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	rnd := basics.Round(5)
@@ -548,7 +547,6 @@ func TestEvaluatorPrefetcher(t *testing.T) {
 
 // Test for error from LookupAsset
 func TestAssetLookupError(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -599,7 +597,6 @@ func TestAssetLookupError(t *testing.T) {
 
 // Test for error from GetCreatorForRound
 func TestGetCreatorForRoundError(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -645,7 +642,6 @@ func TestGetCreatorForRoundError(t *testing.T) {
 
 // Test for error from LookupWithoutRewards
 func TestLookupWithoutRewards(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	rnd := basics.Round(5)
@@ -690,7 +686,6 @@ func TestLookupWithoutRewards(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherQueueExpansion(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	rnd := basics.Round(5)

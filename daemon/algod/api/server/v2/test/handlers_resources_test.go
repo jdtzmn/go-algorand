@@ -351,7 +351,6 @@ func accountInformationResourceLimitsTest(t *testing.T, accountMaker func(int) b
 }
 
 func TestAccountInformationResourceLimits(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for _, tc := range []struct {

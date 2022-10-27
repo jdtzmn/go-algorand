@@ -299,7 +299,6 @@ outer:
 }
 
 func TestCatchpointLabelGeneration(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 

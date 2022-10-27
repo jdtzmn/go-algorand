@@ -26,7 +26,6 @@ import (
 )
 
 func TestBatchVerifierSingle(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// test expected success
 	bv := MakeBatchVerifier()
@@ -51,7 +50,6 @@ func TestBatchVerifierSingle(t *testing.T) {
 }
 
 func TestBatchVerifierBulk(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	for i := 1; i < 64*2+3; i++ {
 		n := i
@@ -72,7 +70,6 @@ func TestBatchVerifierBulk(t *testing.T) {
 }
 
 func TestBatchVerifierBulkWithExpand(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	n := 64
 	bv := MakeBatchVerifier()
@@ -89,7 +86,6 @@ func TestBatchVerifierBulkWithExpand(t *testing.T) {
 }
 
 func TestBatchVerifierWithInvalidSiganture(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	n := 64
 	bv := MakeBatchVerifier()
@@ -125,7 +121,6 @@ func BenchmarkBatchVerifier(b *testing.B) {
 }
 
 func TestEmpty(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	bv := MakeBatchVerifier()
 	require.NoError(t, bv.Verify())
@@ -138,7 +133,6 @@ func TestEmpty(t *testing.T) {
 // TestBatchVerifierIndividualResults tests that VerifyWithFeedback
 // returns the correct failed signature indexes
 func TestBatchVerifierIndividualResults(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for i := 1; i < 64*2+3; i++ {
@@ -177,7 +171,6 @@ func TestBatchVerifierIndividualResults(t *testing.T) {
 // TestBatchVerifierIndividualResultsAllValid tests that VerifyWithFeedback
 // returns the correct failed signature indexes when all are valid
 func TestBatchVerifierIndividualResultsAllValid(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for i := 1; i < 64*2+3; i++ {

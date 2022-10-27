@@ -32,7 +32,6 @@ import (
 // make sure that ToBeHashed function returns a specific length
 // If this test breaks we need to make sure to update the SNARK prover and verifier as well.
 func TestCoinFixedLengthHash(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -59,7 +58,6 @@ func TestCoinFixedLengthHash(t *testing.T) {
 }
 
 func TestHashCoin(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var slots [32]uint64
@@ -142,7 +140,6 @@ func BenchmarkHashCoinGenerate(b *testing.B) {
 }
 
 func TestGenerateCoinHashKATs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// This test produces MSS samples for the SNARK verifier.

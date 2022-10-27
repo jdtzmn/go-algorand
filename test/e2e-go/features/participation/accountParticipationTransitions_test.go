@@ -67,7 +67,6 @@ func registerParticipationAndWait(t *testing.T, client libgoal.Client, part acco
 
 // TODO: figure out what's the purpose of this test and fix it
 func TestKeyRegistration(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	t.Skipf("Skipping flaky test. Re-enable with #3255")
 

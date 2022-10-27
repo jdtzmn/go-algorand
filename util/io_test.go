@@ -27,7 +27,6 @@ import (
 )
 
 func TestIsEmpty(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	testPath := path.Join(os.TempDir(), "this", "is", "a", "long", "path")

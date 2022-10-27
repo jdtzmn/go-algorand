@@ -29,7 +29,6 @@ import (
 )
 
 func TestLRUOnlineAccountsBasic(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseOnlineAcct lruOnlineAccounts
@@ -88,7 +87,6 @@ func TestLRUOnlineAccountsBasic(t *testing.T) {
 }
 
 func TestLRUOnlineAccountsPendingWrites(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseOnlineAcct lruOnlineAccounts
@@ -131,7 +129,6 @@ func TestLRUOnlineAccountsPendingWrites(t *testing.T) {
 }
 
 func TestLRUOnlineAccountsPendingWritesWarning(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseOnlineAcct lruOnlineAccounts
@@ -158,7 +155,6 @@ func TestLRUOnlineAccountsPendingWritesWarning(t *testing.T) {
 }
 
 func TestLRUOnlineAccountsOmittedPendingWrites(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseOnlineAcct lruOnlineAccounts

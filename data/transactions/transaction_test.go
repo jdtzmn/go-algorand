@@ -558,7 +558,6 @@ func TestWellFormedErrors(t *testing.T) {
 
 // TestTransactionHash checks that Transaction.ID() is equivalent to the old simpler crypto.HashObj() implementation.
 func TestTransactionHash(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var txn Transaction
@@ -1283,7 +1282,6 @@ func (s *stateproofTxnTestCase) runIsWellFormedForTestCase() error {
 }
 
 func TestWellFormedStateProofTxn(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	// want to create different Txns, run on all of these cases the check, and have an expected result
 	cases := []stateproofTxnTestCase{
@@ -1306,7 +1304,6 @@ func TestWellFormedStateProofTxn(t *testing.T) {
 }
 
 func TestStateProofTxnShouldBeZero(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	addr1, err := basics.UnmarshalChecksumAddress("NDQCJNNY5WWWFLP4GFZ7MEF2QJSMZYK6OWIV2AQ7OMAVLEFCGGRHFPKJJA")

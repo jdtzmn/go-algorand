@@ -151,7 +151,6 @@ func generateProofForTesting(a *require.Assertions, doLargeTest bool) paramsForT
 }
 
 func TestBuildVerify(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -225,7 +224,6 @@ func calculateHashOnInternalNode(leftNode, rightNode []byte) []byte {
 }
 
 func TestParticipationCommitmentBinaryFormat(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -256,7 +254,6 @@ func TestParticipationCommitmentBinaryFormat(t *testing.T) {
 }
 
 func TestSignatureCommitmentBinaryFormat(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(t)
@@ -318,7 +315,6 @@ func TestSignatureCommitmentBinaryFormat(t *testing.T) {
 // it includes parsing the signature's format (according to Algorand's spec) and binds it to a specific length.
 // here we also expect the scheme to use Falcon signatures and nothing else.
 func TestSimulateSignatureVerification(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -338,7 +334,6 @@ func TestSimulateSignatureVerification(t *testing.T) {
 // it includes parsing the signature's format (according to Algorand's spec) and binds it to a specific length.
 // here we also expect the scheme to use Falcon signatures and nothing else.
 func TestSimulateSignatureVerificationOneEphemeralKey(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -451,7 +446,6 @@ func findLInProof(a *require.Assertions, signature merklesignature.Signature, pr
 }
 
 func TestBuilder_AddRejectsInvalidSigVersion(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// setting up a builder
@@ -485,7 +479,6 @@ func TestBuilder_AddRejectsInvalidSigVersion(t *testing.T) {
 }
 
 func TestBuildAndReady(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -516,7 +509,6 @@ func TestBuildAndReady(t *testing.T) {
 }
 
 func TestErrorCases(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -564,7 +556,6 @@ func checkSigsArray(n int, a *require.Assertions) {
 }
 
 func TestCoinIndex(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -582,7 +573,6 @@ func TestCoinIndex(t *testing.T) {
 }
 
 func TestCoinIndexBetweenWeights(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -609,7 +599,6 @@ func TestCoinIndexBetweenWeights(t *testing.T) {
 }
 
 func TestBuilderWithZeroProvenWeight(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -621,7 +610,6 @@ func TestBuilderWithZeroProvenWeight(t *testing.T) {
 }
 
 func TestBuilder_BuildStateProofCache(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	p := generateProofForTesting(a, true)

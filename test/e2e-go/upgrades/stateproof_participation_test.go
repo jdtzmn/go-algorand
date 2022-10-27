@@ -60,7 +60,6 @@ func waitUntilProtocolUpgrades(a *require.Assertions, fixture *fixtures.RestClie
 }
 
 func TestKeysWithoutStateProofKeyCannotRegister(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -82,7 +81,6 @@ func TestKeysWithoutStateProofKeyCannotRegister(t *testing.T) {
 }
 
 func TestKeysWithoutStateProofKeyCanRegister(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -175,7 +173,6 @@ func waitForAccountToProposeBlock(a *require.Assertions, fixture *fixtures.RestC
 // This test starts with participation keys in Version30, then attempts to let the richest user participate even after
 //  consensus upgrade.
 func TestParticipationWithoutStateProofKeys(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 

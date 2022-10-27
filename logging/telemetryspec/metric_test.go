@@ -51,7 +51,6 @@ func TestTransactionProcessingTimeDistibutionFormatting(t *testing.T) {
 }
 
 func TestAssembleBlockStatsString(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var abs AssembleBlockStats

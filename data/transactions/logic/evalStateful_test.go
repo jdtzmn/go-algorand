@@ -2641,7 +2641,6 @@ func appAddr(id int) basics.Address {
 }
 
 func TestAppInfo(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ep, tx, ledger := makeSampleEnv()
@@ -2662,7 +2661,6 @@ func TestAppInfo(t *testing.T) {
 }
 
 func TestBudget(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ep := defaultEvalParams(nil)
@@ -2679,7 +2677,6 @@ int 695
 }
 
 func TestSelfMutate(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ep, _, ledger := makeSampleEnv()

@@ -144,7 +144,6 @@ func BenchmarkRestoringFromCatchpointFile(b *testing.B) {
 }
 
 func TestCatchupAccessorFoo(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	log := logging.TestingLog(t)
@@ -375,7 +374,6 @@ func TestVerifyCatchpoint(t *testing.T) {
 }
 
 func TestCatchupAccessorResourceCountMismatch(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// setup boilerplate

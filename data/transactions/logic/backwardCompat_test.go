@@ -486,7 +486,6 @@ func TestBackwardCompatAssemble(t *testing.T) {
 }
 
 func TestExplicitConstants(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	require.Equal(t, 4096, maxStringSize, "constant changed, make it version dependent")

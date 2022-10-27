@@ -233,7 +233,6 @@ func TestMultisigAddAndMerge(t *testing.T) {
 }
 
 func TestEmptyMultisig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	var s Seed
 	var secrets *SecretKey
@@ -258,7 +257,6 @@ func TestEmptyMultisig(t *testing.T) {
 }
 
 func TestIncorrectAddrresInMultisig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	var s Seed
 	var secrets *SecretKey
@@ -286,7 +284,6 @@ func TestIncorrectAddrresInMultisig(t *testing.T) {
 }
 
 func TestMoreThanMaxSigsInMultisig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	var s Seed
 	var secrets []*SecretKey
@@ -323,7 +320,6 @@ func TestMoreThanMaxSigsInMultisig(t *testing.T) {
 }
 
 func TestOneSignatureIsEmpty(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	var s Seed
 	var secrets []*SecretKey
@@ -363,7 +359,6 @@ func TestOneSignatureIsEmpty(t *testing.T) {
 // in this test we want to test what happen if one of the signatures are not valid.
 // we create case where are enoguht valid signatures (that pass the thrashold). but since one is false. everything fails.
 func TestOneSignatureIsInvalid(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	var s Seed
 	var userkeypair []*SecretKey
@@ -404,7 +399,6 @@ func TestOneSignatureIsInvalid(t *testing.T) {
 }
 
 func TestMultisigLessThanTrashold(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	var msig MultisigSig
 	var sigs []MultisigSig

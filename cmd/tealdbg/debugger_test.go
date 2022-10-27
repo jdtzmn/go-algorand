@@ -147,7 +147,6 @@ func createSessionFromSource(t *testing.T, program string) *session {
 }
 
 func TestSession(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	s := createSessionFromSource(t, "#pragma version %d\nint 1\ndup\n+\n")
 	err := s.SetBreakpoint(2)
@@ -199,7 +198,6 @@ func TestSession(t *testing.T) {
 // Tests control functions for stepping over subroutines and checks
 // that call stack is inspected correctly.
 func TestCallStackControl(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	newTestCase := func() (*session, chan struct{}, func(), *int) {
@@ -356,7 +354,6 @@ func TestCallStackControl(t *testing.T) {
 }
 
 func TestSourceMaps(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	s := createSessionFromSource(t, "#pragma version %d\nint 1\n")
 

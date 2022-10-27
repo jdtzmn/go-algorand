@@ -32,7 +32,6 @@ var isNum = regexp.MustCompile(`^[0-9]+$`)
 var isAlnum = regexp.MustCompile(`^[a-zA-Z0-9_]*$`)
 
 func TestGetMissingCatchpointLabel(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	tests := []struct {
 		name        string

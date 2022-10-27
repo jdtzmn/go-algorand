@@ -1410,7 +1410,6 @@ int 1`)
 }
 
 func TestDebugTxSubmit(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	source := `#pragma version 5
@@ -1546,7 +1545,6 @@ int 0
 }
 
 func TestDryrunInnerPay(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1601,7 +1599,6 @@ int 1
 }
 
 func TestDryrunScratchSpace(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

@@ -42,7 +42,6 @@ import (
 )
 
 func TestAccountManagerKeys(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	registry := &mocks.MockParticipationRegistry{}
 	testAccountManagerKeys(t, registry, false)
@@ -85,7 +84,6 @@ func registryCloseTest(t testing.TB, registry account.ParticipationRegistry, dbf
 }
 
 func TestAccountManagerKeysRegistry(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	registry, dbName := getRegistryImpl(t, false, true)
 	defer registryCloseTest(t, registry, dbName)
@@ -181,7 +179,6 @@ func testAccountManagerKeys(t *testing.T, registry account.ParticipationRegistry
 }
 
 func TestAccountManagerOverlappingStateProofKeys(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 
@@ -254,7 +251,6 @@ func TestAccountManagerOverlappingStateProofKeys(t *testing.T) {
 }
 
 func TestGetStateProofKeysDontLogErrorOnNilStateProof(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := assert.New(t)
 

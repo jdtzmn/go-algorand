@@ -25,7 +25,6 @@ import (
 )
 
 func TestUUID(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for i := 0; i < 500; i++ {

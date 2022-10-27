@@ -282,7 +282,6 @@ func TestTxnValidationEmptySig(t *testing.T) {
 const spProto = protocol.ConsensusVersion("test-state-proof-enabled")
 
 func TestTxnValidationStateProof(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -460,7 +459,6 @@ func BenchmarkPaysetGroups(b *testing.B) {
 }
 
 func TestTxnGroupMixedSignatures(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, signedTxn, secrets, addrs := generateTestObjects(1, 20, 50)
@@ -566,7 +564,6 @@ func generateTransactionGroups(signedTxns []transactions.SignedTxn, secrets []*c
 }
 
 func TestTxnGroupCacheUpdate(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, signedTxn, secrets, addrs := generateTestObjects(100, 20, 50)
@@ -585,7 +582,6 @@ func TestTxnGroupCacheUpdate(t *testing.T) {
 // TestTxnGroupCacheUpdateMultiSig makes sure that a payment transaction signed with multisig
 // is valid (and added to the cache) only if all signatures in the multisig are correct
 func TestTxnGroupCacheUpdateMultiSig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, signedTxn, _, _ := generateMultiSigTxn(100, 30, 50, t)
@@ -608,7 +604,6 @@ func TestTxnGroupCacheUpdateMultiSig(t *testing.T) {
 // TestTxnGroupCacheUpdateFailLogic test makes sure that a payment transaction contains a logic (and no signature)
 // is valid (and added to the cache) only if logic passes
 func TestTxnGroupCacheUpdateFailLogic(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, signedTxn, _, _ := generateTestObjects(100, 20, 50)
@@ -650,7 +645,6 @@ byte base64 5rZMNsevs5sULO+54aN+OvU6lQ503z2X+SSYUABIx7E=
 // if the logic passes and the signature is correct.
 // for this, we will break the signature and make sure that txn verification fails.
 func TestTxnGroupCacheUpdateLogicWithSig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, signedTxn, secrets, addresses := generateTestObjects(100, 20, 50)
@@ -703,7 +697,6 @@ byte base64 5rZMNsevs5sULO+54aN+OvU6lQ503z2X+SSYUABIx7E=
 // if the logic passes and the multisig is correct.
 // for this, we will break one of the multisig and the logic and make sure that txn verification fails.
 func TestTxnGroupCacheUpdateLogicWithMultiSig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	secrets, _, pks, multiAddress := generateMultiSigAccounts(t, 30)

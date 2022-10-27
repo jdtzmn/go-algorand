@@ -43,7 +43,6 @@ func (l *persistedOnlineAccountDataListNode) getPrev() dataListNode {
 }
 
 func TestRemoveFromListOAD(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedOnlineAccountList()
 	e1 := l.pushFront(&persistedOnlineAccountData{addr: basics.Address{1}})
@@ -58,7 +57,6 @@ func TestRemoveFromListOAD(t *testing.T) {
 }
 
 func TestAddingNewNodeWithAllocatedFreeListOAD(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedOnlineAccountList().allocateFreeNodes(10)
 	checkListPointersOAD(t, l, []*persistedOnlineAccountDataListNode{})
@@ -87,7 +85,6 @@ func checkListPointersOAD(t *testing.T, l *persistedOnlineAccountDataList, es []
 }
 
 func TestMultielementListPositioningOAD(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedOnlineAccountList()
 	checkListPointersOAD(t, l, []*persistedOnlineAccountDataListNode{})
@@ -147,7 +144,6 @@ func TestMultielementListPositioningOAD(t *testing.T) {
 }
 
 func TestSingleElementListPositioningOD(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedOnlineAccountList()
 	checkListPointersOAD(t, l, []*persistedOnlineAccountDataListNode{})
@@ -160,7 +156,6 @@ func TestSingleElementListPositioningOD(t *testing.T) {
 }
 
 func TestRemovedNodeShouldBeMovedToFreeListOAD(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	l := newPersistedOnlineAccountList()
 	e1 := l.pushFront(&persistedOnlineAccountData{addr: basics.Address{1}})

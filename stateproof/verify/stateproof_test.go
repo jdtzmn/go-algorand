@@ -32,7 +32,6 @@ import (
 )
 
 func TestValidateStateProof(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	spHdr := &bookkeeping.BlockHeader{}
@@ -98,7 +97,6 @@ func TestValidateStateProof(t *testing.T) {
 }
 
 func TestAcceptableStateProofWeight(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var votersHdr bookkeeping.BlockHeader
@@ -145,7 +143,6 @@ func TestAcceptableStateProofWeight(t *testing.T) {
 }
 
 func TestStateProofParams(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var votersHdr bookkeeping.BlockHeader

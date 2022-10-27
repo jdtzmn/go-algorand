@@ -313,7 +313,6 @@ func run(t *testing.T, l *prefetcherAlignmentTestLedger, txn transactions.Transa
 }
 
 func TestEvaluatorPrefetcherAlignmentPayment(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	l := &prefetcherAlignmentTestLedger{
@@ -360,7 +359,6 @@ func TestEvaluatorPrefetcherAlignmentPayment(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentCreateAsset(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	l := &prefetcherAlignmentTestLedger{
@@ -397,7 +395,6 @@ func TestEvaluatorPrefetcherAlignmentCreateAsset(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentReconfigAsset(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -451,7 +448,6 @@ func TestEvaluatorPrefetcherAlignmentReconfigAsset(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentAssetOptIn(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -508,7 +504,6 @@ func TestEvaluatorPrefetcherAlignmentAssetOptIn(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentAssetTransfer(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -576,7 +571,6 @@ func TestEvaluatorPrefetcherAlignmentAssetTransfer(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentAssetClawback(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -659,7 +653,6 @@ func TestEvaluatorPrefetcherAlignmentAssetClawback(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentAssetFreeze(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	assetID := basics.AssetIndex(5)
@@ -730,7 +723,6 @@ func TestEvaluatorPrefetcherAlignmentAssetFreeze(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentKeyreg(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	addr := makeAddress(1)
@@ -778,7 +770,6 @@ func TestEvaluatorPrefetcherAlignmentKeyreg(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentCreateApplication(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	addr := makeAddress(1)
@@ -820,7 +811,6 @@ func TestEvaluatorPrefetcherAlignmentCreateApplication(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentDeleteApplication(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -876,7 +866,6 @@ func TestEvaluatorPrefetcherAlignmentDeleteApplication(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentApplicationOptIn(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -936,7 +925,6 @@ func TestEvaluatorPrefetcherAlignmentApplicationOptIn(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentApplicationCloseOut(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -1002,7 +990,6 @@ func TestEvaluatorPrefetcherAlignmentApplicationCloseOut(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentApplicationClearState(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -1068,7 +1055,6 @@ func TestEvaluatorPrefetcherAlignmentApplicationClearState(t *testing.T) {
 }
 
 func TestEvaluatorPrefetcherAlignmentApplicationCallAccountsDeclaration(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -1138,7 +1124,6 @@ func TestEvaluatorPrefetcherAlignmentApplicationCallAccountsDeclaration(t *testi
 }
 
 func TestEvaluatorPrefetcherAlignmentApplicationCallForeignAppsDeclaration(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -1208,7 +1193,6 @@ func TestEvaluatorPrefetcherAlignmentApplicationCallForeignAppsDeclaration(t *te
 }
 
 func TestEvaluatorPrefetcherAlignmentApplicationCallForeignAssetsDeclaration(t *testing.T) {
-	t.Parallel()
 	t.Skip("disabled")
 	partitiontest.PartitionTest(t)
 
@@ -1278,7 +1262,6 @@ func TestEvaluatorPrefetcherAlignmentApplicationCallForeignAssetsDeclaration(t *
 }
 
 func TestEvaluatorPrefetcherAlignmentStateProof(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	addr := makeAddress(1)

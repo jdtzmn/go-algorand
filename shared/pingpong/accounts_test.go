@@ -33,7 +33,6 @@ func makeKeyFromSeed(i uint64) *crypto.SignatureSecrets {
 }
 
 func TestDeterministicAccounts(t *testing.T) {
-	t.Parallel()
 	initCfg := PpConfig{
 		NumPartAccounts:        20,
 		DeterministicKeys:      true,

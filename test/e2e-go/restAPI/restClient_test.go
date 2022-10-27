@@ -897,7 +897,6 @@ func TestClientTruncatesPendingTransactions(t *testing.T) {
 }
 
 func TestClientPrioritizesPendingTransactions(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -941,7 +940,6 @@ func TestClientPrioritizesPendingTransactions(t *testing.T) {
 }
 
 func TestPendingTransactionInfoInnerTxnAssetCreate(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := require.New(fixtures.SynchronizedTest(t))
@@ -1058,7 +1056,6 @@ return
 }
 
 func TestStateProofInParticipationInfo(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -1135,7 +1132,6 @@ func TestStateProofInParticipationInfo(t *testing.T) {
 }
 
 func TestStateProofParticipationKeysAPI(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 
@@ -1163,7 +1159,6 @@ func TestStateProofParticipationKeysAPI(t *testing.T) {
 }
 
 func TestNilStateProofInParticipationInfo(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	defer fixtures.ShutdownSynchronizedTest(t)
 

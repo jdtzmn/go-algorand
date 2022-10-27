@@ -554,7 +554,6 @@ func TestLocalVersionField(t *testing.T) {
 }
 
 func TestGetNonDefaultConfigValues(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	cfg := GetDefaultLocal()

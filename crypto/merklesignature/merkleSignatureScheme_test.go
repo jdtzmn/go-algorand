@@ -551,7 +551,6 @@ func copyProof(proof merklearray.SingleLeafProof) merklearray.SingleLeafProof {
 //#endregion
 
 func TestTreeRootHashLength(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 	keyLifetime := uint64(256)

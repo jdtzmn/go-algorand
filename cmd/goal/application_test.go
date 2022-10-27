@@ -25,7 +25,6 @@ import (
 )
 
 func TestParseMethodArgJSONtoByteSlice(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	makeRepeatSlice := func(size int, value string) []string {

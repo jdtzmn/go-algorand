@@ -30,7 +30,6 @@ import (
 )
 
 func TestLRUBasicAccounts(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var baseAcct lruAccounts

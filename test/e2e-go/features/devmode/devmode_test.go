@@ -31,7 +31,6 @@ import (
 )
 
 func TestDevMode(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	t.Skipf("Skipping flaky test. Re-enable with #3267")
 

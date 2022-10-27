@@ -181,7 +181,6 @@ func (n nonmarshalable) Marshal(pos uint64) (crypto.Hashable, error) {
 }
 
 func TestErrorInMarshal(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := nonmarshalable{1}
@@ -190,7 +189,6 @@ func TestErrorInMarshal(t *testing.T) {
 }
 
 func TestMerkleBuildEdgeCases(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -206,7 +204,6 @@ func TestMerkleBuildEdgeCases(t *testing.T) {
 }
 
 func TestMerkleVCBuildEdgeCases(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -226,7 +223,6 @@ func TestMerkleVCBuildEdgeCases(t *testing.T) {
 }
 
 func TestMerkleProveEdgeCases(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -264,7 +260,6 @@ func TestMerkleProveEdgeCases(t *testing.T) {
 }
 
 func TestMerkleVCProveEdgeCases(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -307,7 +302,6 @@ func TestMerkleVCProveEdgeCases(t *testing.T) {
 }
 
 func TestMerkleVerifyEdgeCases(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -361,7 +355,6 @@ func TestMerkleVerifyEdgeCases(t *testing.T) {
 }
 
 func TestProveDuplicateLeaves(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -393,7 +386,6 @@ func TestProveDuplicateLeaves(t *testing.T) {
 }
 
 func TestMerkleVCVerifyEdgeCases(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -449,7 +441,6 @@ func TestMerkleVCVerifyEdgeCases(t *testing.T) {
 // TestGenericDigest makes sure GenericDigest will not decoded sizes
 // greater than the max allowd.
 func TestGenericDigest(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	err := testWithSize(t, crypto.MaxHashDigestSize)
@@ -479,7 +470,6 @@ func testWithSize(t *testing.T, size int) error {
 }
 
 func TestSizeLimitsMerkle(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// The next operations are heavy on the memory.
@@ -774,7 +764,6 @@ var VCKATs = []KATElement{
 }
 
 func TestMerkleTreeKATs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	testMerkleTreeKATsAux(t, KATsSHA512_256, crypto.Sha512_256)
@@ -799,7 +788,6 @@ func testMerkleTreeKATsAux(t *testing.T, KATs []KATElement, hashType crypto.Hash
 }
 
 func TestVCKATs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for j := 0; j < len(VCKATs); j++ {
@@ -818,7 +806,6 @@ func TestVCKATs(t *testing.T) {
 }
 
 func TestMerkleTreeInternalNodeWithOneChild(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := make(TestArray, 5)
@@ -847,7 +834,6 @@ func TestMerkleTreeInternalNodeWithOneChild(t *testing.T) {
 }
 
 func TestMerkleTreeInternalNodeFullTree(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := make(TestArray, 4)
@@ -908,7 +894,6 @@ func getRandomPositions(numElets, max uint64) (res []uint64) {
 }
 
 func TestMerkleVC(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	for i := uint64(1); i < 32; i++ {
@@ -982,7 +967,6 @@ func testMerkleVC(t *testing.T, hashtype crypto.HashType, size uint64) {
 }
 
 func TestMerkleTreeOneLeaf(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := make(TestArray, 1)
@@ -1000,7 +984,6 @@ func TestMerkleTreeOneLeaf(t *testing.T) {
 }
 
 func TestVCOneLeaf(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	a := make(TestArray, 1)
@@ -1018,7 +1001,6 @@ func TestVCOneLeaf(t *testing.T) {
 }
 
 func TestTreeDepthField(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var sizes = []int{1, 2, 3}
@@ -1077,7 +1059,6 @@ func TestTreeDepthField(t *testing.T) {
 }
 
 func TestTreeNumOfLeavesField(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 
@@ -1125,7 +1106,6 @@ func TestTreeNumOfLeavesField(t *testing.T) {
 }
 
 func TestProveSingleLeaf(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	size := uint64(15)
@@ -1154,7 +1134,6 @@ func TestProveSingleLeaf(t *testing.T) {
 }
 
 func TestVCProveSingleLeaf(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	size := uint64(15)

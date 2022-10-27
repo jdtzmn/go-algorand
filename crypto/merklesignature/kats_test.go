@@ -94,7 +94,6 @@ func generateMssKat(startRound, atRound, numOfKeys uint64, messageToSign []byte)
 }
 
 func TestGenerateKat(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	a := require.New(t)
 

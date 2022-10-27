@@ -97,7 +97,6 @@ func TestDefaultMessageTagsLength(t *testing.T) {
 // offsets are 64-bit aligned. This is required due to go atomic library
 // limitation.
 func TestAtomicVariablesAlignment(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	p := wsPeer{}
@@ -107,7 +106,6 @@ func TestAtomicVariablesAlignment(t *testing.T) {
 }
 
 func TestTagCounterFiltering(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	tagCounterTags := map[string]*metrics.TagCounter{
@@ -132,7 +130,6 @@ func TestTagCounterFiltering(t *testing.T) {
 }
 
 func TestVersionToMajorMinor(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	ma, mi, err := versionToMajorMinor("1.2")
@@ -157,7 +154,6 @@ func TestVersionToMajorMinor(t *testing.T) {
 }
 
 func TestVersionToFeature(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	tests := []struct {

@@ -52,7 +52,6 @@ func main(source string) string {
 
 // TestPayAction ensures a pay in teal affects balances
 func TestPayAction(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisInitState, addrs, _ := ledgertesting.Genesis(10)
@@ -191,7 +190,6 @@ func TestPayAction(t *testing.T) {
 
 // TestAxferAction ensures axfers in teal have the intended effects
 func TestAxferAction(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisInitState, addrs, _ := ledgertesting.Genesis(10)
@@ -414,7 +412,6 @@ func newTestLedgerFull(t testing.TB, balances bookkeeping.GenesisBalances, cv pr
 
 // TestClawbackAction ensures an app address can act as clawback address.
 func TestClawbackAction(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -500,7 +497,6 @@ func TestClawbackAction(t *testing.T) {
 
 // TestRekeyAction ensures an app can transact for a rekeyed account
 func TestRekeyAction(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -605,7 +601,6 @@ skipclose:
 // TestRekeyActionCloseAccount ensures closing and reopening a rekeyed account in a single app call
 // properly removes the app as an authorizer for the account
 func TestRekeyActionCloseAccount(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -681,7 +676,6 @@ func TestRekeyActionCloseAccount(t *testing.T) {
 
 // TestDuplicatePayAction shows two pays with same parameters can be done as inner tarnsactions
 func TestDuplicatePayAction(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -757,7 +751,6 @@ func TestDuplicatePayAction(t *testing.T) {
 
 // TestInnerTxCount ensures that inner transactions increment the TxnCounter
 func TestInnerTxnCount(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -806,7 +799,6 @@ func TestInnerTxnCount(t *testing.T) {
 
 // TestAcfgAction ensures assets can be created and configured in teal
 func TestAcfgAction(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -983,7 +975,6 @@ submit:  itxn_submit
 // able to prefund the account - you don't know the app id.  But here
 // we can know, so it helps exercise txncounter changes.
 func TestAsaDuringInit(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -1037,7 +1028,6 @@ func TestAsaDuringInit(t *testing.T) {
 }
 
 func TestRekey(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -1089,7 +1079,6 @@ func TestRekey(t *testing.T) {
 }
 
 func TestNote(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -1138,7 +1127,6 @@ func TestNote(t *testing.T) {
 }
 
 func TestKeyreg(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -1239,7 +1227,6 @@ nonpart:
 }
 
 func TestInnerAppCall(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -1307,7 +1294,6 @@ func TestInnerAppCall(t *testing.T) {
 // TestInnerAppManipulate ensures that apps called from inner transactions make
 // the changes expected when invoked.
 func TestInnerAppManipulate(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -2471,7 +2457,6 @@ func BenchmarkMaximumCallStackDepth(b *testing.B) {
 
 // TestInnerClearState ensures inner ClearState performs close out properly, even if rejects.
 func TestInnerClearState(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -2560,7 +2545,6 @@ itxn_submit
 // TestInnerClearStateBadCallee ensures that inner clear state programs are not
 // allowed to use more than 700 (MaxAppProgramCost)
 func TestInnerClearStateBadCallee(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -2662,7 +2646,6 @@ skip:
 // TestInnerClearStateBadCaller ensures that inner clear state programs cannot
 // be called with less than 700 (MaxAppProgramCost)) OpcodeBudget.
 func TestInnerClearStateBadCaller(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -2784,7 +2767,6 @@ itxn_submit
 // TestClearStateInnerPay ensures that ClearState programs can run inner txns in
 // v30, but not in vFuture. (Test should add v31 after it exists.)
 func TestClearStateInnerPay(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	tests := []struct {
@@ -2899,7 +2881,6 @@ itxn_submit
 // TestGlobalChangesAcrossApps ensures that state changes are seen by other app
 // calls when using inners.
 func TestGlobalChangesAcrossApps(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -3008,7 +2989,6 @@ check:
 // TestLocalChangesAcrossApps ensures that state changes are seen by other app
 // calls when using inners.
 func TestLocalChangesAcrossApps(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -3120,7 +3100,6 @@ check:
 }
 
 func TestForeignAppAccountsAccessible(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -3187,7 +3166,6 @@ itxn_submit
 // cannot be used as mutable references; ie the accounts cannot be used by
 // opcodes that modify local storage.
 func TestForeignAppAccountsImmutable(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -3242,7 +3220,6 @@ int 1
 // In the case where the foreign app account is also provided in the
 // transaction's account field, mutable references should be allowed.
 func TestForeignAppAccountsMutable(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()
@@ -3324,7 +3301,6 @@ done:
 // TestReloadWithTxns confirms that the ledger can be reloaded from "disk" when
 // doing so requires replaying some interesting AVM txns.
 func TestReloadWithTxns(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genBalances, addrs, _ := ledgertesting.NewTestGenesis()

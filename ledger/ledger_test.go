@@ -1657,7 +1657,6 @@ func TestListAssetsAndApplications(t *testing.T) {
 // voters round, if this won't be available the verification would fail.
 // the voter tracker should prevent the remove needed blocks from the database.
 func TestLedgerKeepsOldBlocksForStateProof(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// since the first state proof is expected to happen on stateproofInterval*2 we would start give-up on state proofs we would
@@ -1938,7 +1937,6 @@ func TestLedgerMemoryLeak(t *testing.T) {
 
 // TestLookupAgreement ensures LookupAgreement return an empty data for offline accounts
 func TestLookupAgreement(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisInitState, _ := ledgertesting.GenerateInitState(t, protocol.ConsensusCurrentVersion, 100)
@@ -2022,7 +2020,6 @@ func BenchmarkLedgerStartup(b *testing.B) {
 // TestLedgerReloadShrinkDeltas checks the ledger has correct account state
 // after reloading with new configuration with shorter in-memory deltas for trackers
 func TestLedgerReloadShrinkDeltas(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	dbName := fmt.Sprintf("%s.%d", t.Name(), crypto.RandUint64())
@@ -2205,7 +2202,6 @@ func TestLedgerReloadShrinkDeltas(t *testing.T) {
 // 4. Add 2001 block with a txn first=1001, last=2001 and block data access for 1000
 // 5. Expect the txn to be accepted
 func TestLedgerReloadTxTailHistoryAccess(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	const preReleaseDBVersion = 6
@@ -2384,7 +2380,6 @@ int %d // 10001000
 // TestLedgerMigrateV6ShrinkDeltas opens a ledger + dbV6, submits a bunch of txns,
 // then migrates db and reopens ledger, and checks that the state is correct
 func TestLedgerMigrateV6ShrinkDeltas(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accountDBVersion = 6
@@ -2659,7 +2654,6 @@ func TestLedgerMigrateV6ShrinkDeltas(t *testing.T) {
 // TestLedgerTxTailCachedBlockHeaders checks [Latest - MaxTxnLife...Latest] block headers
 // are available via txTail
 func TestLedgerTxTailCachedBlockHeaders(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	genesisInitState, _ := ledgertesting.GenerateInitState(t, protocol.ConsensusFuture, 10_000_000_000)
@@ -2709,7 +2703,6 @@ func TestLedgerTxTailCachedBlockHeaders(t *testing.T) {
 // TestLedgerKeyregFlip generates keyreg transactions for flipping genesis accounts state.
 // It checks 1) lookup returns correct values 2) lookup agreement returns correct values
 func TestLedgerKeyregFlip(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	dbName := fmt.Sprintf("%s.%d", t.Name(), crypto.RandUint64())
@@ -2849,7 +2842,6 @@ func verifyVotersContent(t *testing.T, expected map[basics.Round]*ledgercore.Vot
 }
 
 func TestVotersReloadFromDisk(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
@@ -2898,7 +2890,6 @@ func TestVotersReloadFromDisk(t *testing.T) {
 }
 
 func TestVotersReloadFromDiskAfterOneStateProofCommitted(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
 
@@ -2959,7 +2950,6 @@ func TestVotersReloadFromDiskAfterOneStateProofCommitted(t *testing.T) {
 }
 
 func TestVotersReloadFromDiskPassRecoveryPeriod(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 	proto := config.Consensus[protocol.ConsensusCurrentVersion]
 

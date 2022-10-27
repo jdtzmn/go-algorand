@@ -63,7 +63,6 @@ func compactSigCheck(t *testing.T, sig []byte) {
 }
 
 func TestSignatureValidity(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	pubkey, seckey := generateKeyPair()
@@ -89,7 +88,6 @@ func TestSignatureValidity(t *testing.T) {
 }
 
 func TestInvalidRecoveryID(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, seckey := generateKeyPair()
@@ -103,7 +101,6 @@ func TestInvalidRecoveryID(t *testing.T) {
 }
 
 func TestSignAndRecover(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	pubkey1, seckey := generateKeyPair()
@@ -122,7 +119,6 @@ func TestSignAndRecover(t *testing.T) {
 }
 
 func TestSignDeterministic(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	_, seckey := generateKeyPair()
@@ -143,7 +139,6 @@ func TestSignDeterministic(t *testing.T) {
 }
 
 func TestRandomMessagesWithSameKey(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	pubkey, seckey := generateKeyPair()
@@ -154,7 +149,6 @@ func TestRandomMessagesWithSameKey(t *testing.T) {
 }
 
 func TestRandomMessagesWithRandomKeys(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	keys := func() ([]byte, []byte) {
@@ -194,7 +188,6 @@ func signAndRecoverWithRandomMessages(t *testing.T, keys func() ([]byte, []byte)
 }
 
 func TestRecoveryOfRandomSignature(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	pubkey1, _ := generateKeyPair()
@@ -210,7 +203,6 @@ func TestRecoveryOfRandomSignature(t *testing.T) {
 }
 
 func TestRandomMessagesAgainstValidSig(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	pubkey1, seckey := generateKeyPair()
@@ -230,7 +222,6 @@ func TestRandomMessagesAgainstValidSig(t *testing.T) {
 // Useful when the underlying libsecp256k1 API changes to quickly
 // check only recover function without use of signature function
 func TestRecoverSanity(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	msg, _ := hex.DecodeString("ce0677bb30baa8cf067c88db9811f4333d131bf8bcf12fe7065d211dce971008")

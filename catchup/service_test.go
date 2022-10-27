@@ -976,7 +976,6 @@ func TestSynchronizingTime(t *testing.T) {
 }
 
 func TestDownloadBlocksToSupportStateProofs(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	// make sure we download enough blocks to verify state proof 512

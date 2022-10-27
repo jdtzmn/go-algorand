@@ -60,7 +60,6 @@ var (
 )
 
 func TestInitialize(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	testcases := []struct {
@@ -139,7 +138,6 @@ func TestInitialize(t *testing.T) {
 }
 
 func TestReadOnlyError(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	expiredContext, expiredContextCancelFunc := context.WithCancel(context.Background())
@@ -150,7 +148,6 @@ func TestReadOnlyError(t *testing.T) {
 }
 
 func TestUnknownVersionError(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accessor, err := MakeAccessor("test-unknown-version", false, true)
@@ -172,7 +169,6 @@ func TestUnknownVersionError(t *testing.T) {
 }
 
 func TestNewDBFlag(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	var captureNewDB bool
@@ -221,7 +217,6 @@ func TestNewDBFlag(t *testing.T) {
 }
 
 func TestResumeUpgrading(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	accessor, err := MakeAccessor("test-resume", false, true)

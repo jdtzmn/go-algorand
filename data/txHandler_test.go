@@ -191,7 +191,6 @@ func makeRandomTransactions(num int) ([]transactions.SignedTxn, []byte) {
 }
 
 func TestTxHandlerProcessIncomingTxn(t *testing.T) {
-	t.Parallel()
 	partitiontest.PartitionTest(t)
 
 	const numTxns = 11
