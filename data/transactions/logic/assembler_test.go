@@ -2755,11 +2755,9 @@ func TestGetSpec(t *testing.T) {
 	require.Equal(t, "unknown opcode: nonsense", ops.Errors[1].Err.Error())
 }
 
-func TestAddPseudoDocTags(t *testing.T) {
-	t.Parallel()
+func TestAddPseudoDocTags(t *testing.T) { // nolint:paralleltest // Not parallel because it modifies pseudoOps and opDocByName which are global maps
 	partitiontest.PartitionTest(t)
-	// Not parallel because it modifies pseudoOps and opDocByName which are global maps
-	// t.Parallel()
+
 	defer func() {
 		delete(pseudoOps, "tests")
 		delete(opDocByName, "multiple")

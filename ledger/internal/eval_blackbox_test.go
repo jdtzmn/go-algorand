@@ -221,10 +221,8 @@ func TestBlockEvaluator(t *testing.T) {
 	require.Equal(t, bal2new.MicroAlgos.Raw, bal2.MicroAlgos.Raw-minFee.Raw)
 }
 
-func TestRekeying(t *testing.T) {
-	t.Parallel()
+func TestRekeying(t *testing.T) { // nolint:paralleltest // NO t.Parallel()! This test manipulates []protocol.Consensus
 	partitiontest.PartitionTest(t)
-	// t.Parallel() NO! This test manipulates []protocol.Consensus
 
 	// Pretend rekeying is supported
 	actual := config.Consensus[protocol.ConsensusCurrentVersion]
