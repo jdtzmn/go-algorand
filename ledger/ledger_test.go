@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2022 Algorand, Inc.
+// Copyright (C) 2019-2023 Algorand, Inc.
 // This file is part of go-algorand
 //
 // go-algorand is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ import (
 	"runtime"
 	"sort"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 
@@ -41,6 +42,7 @@ import (
 	"github.com/algorand/go-algorand/data/transactions/logic"
 	"github.com/algorand/go-algorand/data/transactions/verify"
 	"github.com/algorand/go-algorand/ledger/ledgercore"
+	"github.com/algorand/go-algorand/ledger/store"
 	ledgertesting "github.com/algorand/go-algorand/ledger/testing"
 	"github.com/algorand/go-algorand/logging"
 	"github.com/algorand/go-algorand/protocol"
@@ -1476,6 +1478,31 @@ func benchLedgerCache(b *testing.B, startRound basics.Round) {
 	}
 }
 
+func triggerTrackerFlush(t *testing.T, l *Ledger, genesisInitState ledgercore.InitState) {
+	l.trackers.mu.RLock()
+	initialDbRound := l.trackers.dbRound
+	currentDbRound := initialDbRound
+	l.trackers.lastFlushTime = time.Time{}
+	l.trackers.mu.RUnlock()
+
+	addEmptyValidatedBlock(t, l, genesisInitState.Accounts)
+
+	const timeout = 2 * time.Second
+	started := time.Now()
+
+	// We can't truly wait for scheduleCommit to take place, which means without waiting using sleeps
+	// we might beat scheduleCommit's addition to accountsWriting, making our wait on it continue immediately.
+	// The solution is to wait for the advancement of l.trackers.dbRound, which is a side effect of postCommit's success.
+	for currentDbRound == initialDbRound {
+		time.Sleep(50 * time.Microsecond)
+		require.True(t, time.Now().Sub(started) < timeout)
+		l.trackers.mu.RLock()
+		currentDbRound = l.trackers.dbRound
+		l.trackers.mu.RUnlock()
+	}
+	l.trackers.waitAccountsWriting()
+}
+
 func TestLedgerReload(t *testing.T) {
 	partitiontest.PartitionTest(t)
 
@@ -1509,6 +1536,36 @@ func TestLedgerReload(t *testing.T) {
 		if i%13 == 0 {
 			l.WaitForCommit(blk.Round())
 		}
+	}
+}
+
+func TestWaitLedgerReload(t *testing.T) {
+	partitiontest.PartitionTest(t)
+	a := require.New(t)
+
+	dbName := fmt.Sprintf("%s.%d", t.Name(), crypto.RandUint64())
+	genesisInitState, _ := ledgertesting.GenerateInitState(t, protocol.ConsensusCurrentVersion, 100)
+	const inMem = true
+	cfg := config.GetDefaultLocal()
+	cfg.MaxAcctLookback = 0
+	log := logging.TestingLog(t)
+	log.SetLevel(logging.Info)
+	l, err := OpenLedger(log, dbName, inMem, genesisInitState, cfg)
+	require.NoError(t, err)
+	defer l.Close()
+
+	waitRound := l.Latest() + 1
+	waitChannel := l.Wait(waitRound)
+
+	err = l.reloadLedger()
+	a.NoError(err)
+	triggerTrackerFlush(t, l, genesisInitState)
+
+	select {
+	case <-waitChannel:
+		return
+	default:
+		a.Failf("", "Wait channel did not receive an expected signal for round %d", waitRound)
 	}
 }
 
@@ -2193,19 +2250,197 @@ func TestLedgerReloadShrinkDeltas(t *testing.T) {
 	}
 }
 
+// TestLedgerReloadTxTailHistoryAccess checks txtail has MaxTxnLife + DeeperBlockHeaderHistory block headers
+// for TEAL after applying catchpoint.
+// Simulate catchpoints by the following:
+// 1. Say ledger is at version 6 (pre shorher deltas)
+// 2. Put 2000 empty blocks
+// 3. Reload and upgrade to version 7 (that's what catchpoint apply code does)
+// 4. Add 2001 block with a txn first=1001, last=2001 and block data access for 1000
+// 5. Expect the txn to be accepted
+func TestLedgerReloadTxTailHistoryAccess(t *testing.T) {
+	partitiontest.PartitionTest(t)
+
+	const preReleaseDBVersion = 6
+
+	dbName := fmt.Sprintf("%s.%d", t.Name(), crypto.RandUint64())
+	genesisInitState, initKeys := ledgertesting.GenerateInitState(t, protocol.ConsensusCurrentVersion, 10_000_000_000)
+	proto := config.Consensus[protocol.ConsensusCurrentVersion]
+	const inMem = true
+	cfg := config.GetDefaultLocal()
+
+	log := logging.TestingLog(t)
+	log.SetLevel(logging.Info)
+	l, err := OpenLedger(log, dbName, inMem, genesisInitState, cfg)
+	require.NoError(t, err)
+	defer func() {
+		l.Close()
+	}()
+
+	// reset tables and re-init again, similary to the catchpount apply code
+	// since the ledger has only genesis accounts, this recreates them
+	err = l.trackerDBs.Wdb.Atomic(func(ctx context.Context, tx *sql.Tx) error {
+		arw := store.NewAccountsSQLReaderWriter(tx)
+		err0 := arw.AccountsReset(ctx)
+		if err0 != nil {
+			return err0
+		}
+		tp := store.TrackerDBParams{
+			InitAccounts:      l.GenesisAccounts(),
+			InitProto:         l.GenesisProtoVersion(),
+			GenesisHash:       l.GenesisHash(),
+			FromCatchpoint:    true,
+			CatchpointEnabled: l.catchpoint.catchpointEnabled(),
+			DbPathPrefix:      l.catchpoint.dbDirectory,
+			BlockDb:           l.blockDBs,
+		}
+		_, err0 = store.RunMigrations(ctx, tx, tp, l.log, preReleaseDBVersion /*target database version*/)
+		if err0 != nil {
+			return err0
+		}
+
+		if err0 := store.AccountsUpdateSchemaTest(ctx, tx); err != nil {
+			return err0
+		}
+
+		return nil
+	})
+	require.NoError(t, err)
+
+	var sender basics.Address
+	var key *crypto.SignatureSecrets
+	for addr := range genesisInitState.Accounts {
+		if addr != testPoolAddr && addr != testSinkAddr {
+			sender = addr
+			key = initKeys[addr]
+			break
+		}
+	}
+
+	roundToTimeStamp := func(rnd int) int64 {
+		return int64(rnd*1000 + rnd)
+	}
+
+	blk := genesisInitState.Block
+	maxBlocks := 2 * int(proto.MaxTxnLife) // 2000 blocks to add
+	for i := 1; i <= maxBlocks; i++ {
+		blk.BlockHeader.Round++
+		blk.BlockHeader.TimeStamp = roundToTimeStamp(i)
+		err = l.AddBlock(blk, agreement.Certificate{})
+		require.NoError(t, err)
+		if i%100 == 0 || i == maxBlocks-1 {
+			l.WaitForCommit(blk.BlockHeader.Round)
+		}
+	}
+
+	// drop new tables
+	// reloadLedger should migrate db properly
+	err = l.trackerDBs.Wdb.Atomic(func(ctx context.Context, tx *sql.Tx) error {
+		var resetExprs = []string{
+			`DROP TABLE IF EXISTS onlineaccounts`,
+			`DROP TABLE IF EXISTS txtail`,
+			`DROP TABLE IF EXISTS onlineroundparamstail`,
+			`DROP TABLE IF EXISTS catchpointfirststageinfo`,
+		}
+		for _, stmt := range resetExprs {
+			_, err0 := tx.ExecContext(ctx, stmt)
+			if err0 != nil {
+				return err0
+			}
+		}
+		return nil
+	})
+	require.NoError(t, err)
+
+	err = l.reloadLedger()
+	require.NoError(t, err)
+
+	source := fmt.Sprintf(`#pragma version 7
+int %d // 1000
+block BlkTimestamp
+int %d // 10001000
+==
+`, proto.MaxTxnLife, roundToTimeStamp(int(proto.MaxTxnLife)))
+
+	ops, err := logic.AssembleString(source)
+	require.NoError(t, err)
+	approvalProgram := ops.Program
+
+	clearStateProgram := []byte("\x07") // empty
+	appcreateFields := transactions.ApplicationCallTxnFields{
+		ApprovalProgram:   approvalProgram,
+		ClearStateProgram: clearStateProgram,
+		GlobalStateSchema: basics.StateSchema{NumUint: 1},
+		LocalStateSchema:  basics.StateSchema{NumUint: 1},
+	}
+
+	correctTxHeader := transactions.Header{
+		Sender:      sender,
+		Fee:         basics.MicroAlgos{Raw: proto.MinTxnFee * 2},
+		FirstValid:  basics.Round(proto.MaxTxnLife + 1),
+		LastValid:   basics.Round(2*proto.MaxTxnLife + 1),
+		GenesisID:   genesisInitState.Block.GenesisID(),
+		GenesisHash: genesisInitState.GenesisHash,
+	}
+
+	appcreate := transactions.Transaction{
+		Type:                     protocol.ApplicationCallTx,
+		Header:                   correctTxHeader,
+		ApplicationCallTxnFields: appcreateFields,
+	}
+
+	stx := sign(map[basics.Address]*crypto.SignatureSecrets{sender: key}, appcreate)
+	txib, err := blk.EncodeSignedTxn(stx, transactions.ApplyData{})
+	require.NoError(t, err)
+
+	blk.BlockHeader.Round++
+	blk.BlockHeader.TimeStamp++
+	blk.TxnCounter++
+	blk.Payset = append(blk.Payset, txib)
+	blk.TxnCommitments, err = blk.PaysetCommit()
+	require.NoError(t, err)
+
+	err = l.AddBlock(blk, agreement.Certificate{})
+	require.NoError(t, err)
+
+	latest := l.Latest()
+	require.Equal(t, basics.Round(2*proto.MaxTxnLife+1), latest)
+
+	// add couple more blocks to have the block with `blk BlkTimestamp` to be dbRound + 1
+	// reload again and ensure this block can be replayed
+	programRound := blk.BlockHeader.Round
+	target := latest + basics.Round(cfg.MaxAcctLookback) - 1
+	blk = genesisInitState.Block
+	blk.BlockHeader.Round = latest
+	for i := latest + 1; i <= target; i++ {
+		blk.BlockHeader.Round++
+		blk.BlockHeader.TimeStamp = roundToTimeStamp(int(i))
+		err = l.AddBlock(blk, agreement.Certificate{})
+		require.NoError(t, err)
+	}
+
+	commitRoundLookback(basics.Round(cfg.MaxAcctLookback), l)
+	l.trackers.mu.RLock()
+	require.Equal(t, programRound, l.trackers.dbRound+1) // programRound is next to be replayed
+	l.trackers.mu.RUnlock()
+	err = l.reloadLedger()
+	require.NoError(t, err)
+}
+
 // TestLedgerMigrateV6ShrinkDeltas opens a ledger + dbV6, submits a bunch of txns,
 // then migrates db and reopens ledger, and checks that the state is correct
 func TestLedgerMigrateV6ShrinkDeltas(t *testing.T) {
 	partitiontest.PartitionTest(t)
 
-	accountDBVersion = 6
+	prevAccountDBVersion := store.AccountDBVersion
+	store.AccountDBVersion = 6
 	defer func() {
-		accountDBVersion = 7
+		store.AccountDBVersion = prevAccountDBVersion
 	}()
 	dbName := fmt.Sprintf("%s.%d", t.Name(), crypto.RandUint64())
 	testProtocolVersion := protocol.ConsensusVersion("test-protocol-migrate-shrink-deltas")
 	proto := config.Consensus[protocol.ConsensusV31]
-	proto.RewardsRateRefreshInterval = 500
+	proto.RewardsRateRefreshInterval = 200
 	config.Consensus[testProtocolVersion] = proto
 	defer func() {
 		delete(config.Consensus, testProtocolVersion)
@@ -2224,16 +2459,7 @@ func TestLedgerMigrateV6ShrinkDeltas(t *testing.T) {
 	}()
 	// create tables so online accounts can still be written
 	err = trackerDB.Wdb.Atomic(func(ctx context.Context, tx *sql.Tx) error {
-		if err := accountsCreateOnlineAccountsTable(ctx, tx); err != nil {
-			return err
-		}
-		if err := accountsCreateTxTailTable(ctx, tx); err != nil {
-			return err
-		}
-		if err := accountsCreateOnlineRoundParamsTable(ctx, tx); err != nil {
-			return err
-		}
-		if err := accountsCreateCatchpointFirstStageInfoTable(ctx, tx); err != nil {
+		if err := store.AccountsUpdateSchemaTest(ctx, tx); err != nil {
 			return err
 		}
 		return nil
@@ -2262,7 +2488,7 @@ func TestLedgerMigrateV6ShrinkDeltas(t *testing.T) {
 	l.trackers.acctsOnline = nil
 	l.acctsOnline = onlineAccounts{}
 
-	maxBlocks := 2000
+	maxBlocks := 1000
 	accounts := make(map[basics.Address]basics.AccountData, len(genesisInitState.Accounts))
 	keys := make(map[basics.Address]*crypto.SignatureSecrets, len(initKeys))
 	// regular addresses: all init accounts minus pools
@@ -2407,7 +2633,7 @@ func TestLedgerMigrateV6ShrinkDeltas(t *testing.T) {
 	l.Close()
 
 	cfg.MaxAcctLookback = shorterLookback
-	accountDBVersion = 7
+	store.AccountDBVersion = 7
 	// delete tables since we want to check they can be made from other data
 	err = trackerDB.Wdb.Atomic(func(ctx context.Context, tx *sql.Tx) error {
 		if _, err := tx.ExecContext(ctx, "DROP TABLE IF EXISTS onlineaccounts"); err != nil {

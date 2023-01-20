@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2022 Algorand, Inc.
+// Copyright (C) 2019-2023 Algorand, Inc.
 // This file is part of go-algorand
 //
 // go-algorand is free software: you can redistribute it and/or modify
@@ -35,6 +35,7 @@ import (
 	"github.com/algorand/go-algorand/ledger/apply"
 	"github.com/algorand/go-algorand/ledger/internal"
 	"github.com/algorand/go-algorand/ledger/ledgercore"
+	"github.com/algorand/go-algorand/ledger/store/blockdb"
 	"github.com/algorand/go-algorand/logging"
 	"github.com/algorand/go-algorand/protocol"
 	"github.com/algorand/go-algorand/util/db"
@@ -159,6 +160,11 @@ func OpenLedger(
 		l.genesisAccounts = make(map[basics.Address]basics.AccountData)
 	}
 
+	l.blockQ, err = newBlockQueue(l)
+	if err != nil {
+		return nil, err
+	}
+
 	err = l.reloadLedger()
 	if err != nil {
 		return nil, err
@@ -172,8 +178,7 @@ func (l *Ledger) reloadLedger() error {
 	// blockQ is having a sync goroutine which indirectly calls other trackers. We want to eliminate that go-routine first,
 	// and follow up by taking the trackers lock.
 	if l.blockQ != nil {
-		l.blockQ.close()
-		l.blockQ = nil
+		l.blockQ.stop()
 	}
 
 	// take the trackers lock. This would ensure that no other goroutine is using the trackers.
@@ -185,9 +190,9 @@ func (l *Ledger) reloadLedger() error {
 
 	// init block queue
 	var err error
-	l.blockQ, err = bqInit(l)
+	err = l.blockQ.start()
 	if err != nil {
-		err = fmt.Errorf("reloadLedger.bqInit %v", err)
+		err = fmt.Errorf("reloadLedger.blockQ.start %v", err)
 		return err
 	}
 
@@ -224,7 +229,7 @@ func (l *Ledger) reloadLedger() error {
 	}
 
 	// post-init actions
-	if trackerDBInitParams.vacuumOnStartup || l.cfg.OptimizeAccountsDatabaseOnStartup {
+	if trackerDBInitParams.VacuumOnStartup || l.cfg.OptimizeAccountsDatabaseOnStartup {
 		err = l.accts.vacuumDatabase(context.Background())
 		if err != nil {
 			return err
@@ -245,12 +250,12 @@ func (l *Ledger) verifyMatchingGenesisHash() (err error) {
 	start := time.Now()
 	ledgerVerifygenhashCount.Inc(nil)
 	err = l.blockDBs.Rdb.Atomic(func(ctx context.Context, tx *sql.Tx) error {
-		latest, err := blockLatest(tx)
+		latest, err := blockdb.BlockLatest(tx)
 		if err != nil {
 			return err
 		}
 
-		hdr, err := blockGetHdr(tx, latest)
+		hdr, err := blockdb.BlockGetHdr(tx, latest)
 		if err != nil {
 			return err
 		}
@@ -334,7 +339,7 @@ func (l *Ledger) setSynchronousMode(ctx context.Context, synchronousMode db.Sync
 // - creates and populates it with genesis blocks
 // - ensures DB is in good shape for archival mode and resets it if not
 func initBlocksDB(tx *sql.Tx, l *Ledger, initBlocks []bookkeeping.Block, isArchival bool) (err error) {
-	err = blockInit(tx, initBlocks)
+	err = blockdb.BlockInit(tx, initBlocks)
 	if err != nil {
 		err = fmt.Errorf("initBlocksDB.blockInit %v", err)
 		return err
@@ -342,7 +347,7 @@ func initBlocksDB(tx *sql.Tx, l *Ledger, initBlocks []bookkeeping.Block, isArchi
 
 	// in archival mode check if DB contains all blocks up to the latest
 	if isArchival {
-		earliest, err := blockEarliest(tx)
+		earliest, err := blockdb.BlockEarliest(tx)
 		if err != nil {
 			err = fmt.Errorf("initBlocksDB.blockEarliest %v", err)
 			return err
@@ -352,12 +357,12 @@ func initBlocksDB(tx *sql.Tx, l *Ledger, initBlocks []bookkeeping.Block, isArchi
 		// So reset the DB and init it again
 		if earliest != basics.Round(0) {
 			l.log.Warnf("resetting blocks DB (earliest block is %v)", earliest)
-			err := blockResetDB(tx)
+			err := blockdb.BlockResetDB(tx)
 			if err != nil {
 				err = fmt.Errorf("initBlocksDB.blockResetDB %v", err)
 				return err
 			}
-			err = blockInit(tx, initBlocks)
+			err = blockdb.BlockInit(tx, initBlocks)
 			if err != nil {
 				err = fmt.Errorf("initBlocksDB.blockInit 2 %v", err)
 				return err
@@ -374,8 +379,7 @@ func (l *Ledger) Close() {
 	// we shut the the blockqueue first, since it's sync goroutine dispatches calls
 	// back to the trackers.
 	if l.blockQ != nil {
-		l.blockQ.close()
-		l.blockQ = nil
+		l.blockQ.stop()
 	}
 
 	// take the trackers lock. This would ensure that no other goroutine is using the trackers.
@@ -392,7 +396,7 @@ func (l *Ledger) Close() {
 
 // RegisterBlockListeners registers listeners that will be called when a
 // new block is added to the ledger.
-func (l *Ledger) RegisterBlockListeners(listeners []BlockListener) {
+func (l *Ledger) RegisterBlockListeners(listeners []ledgercore.BlockListener) {
 	l.notifier.register(listeners)
 }
 
@@ -435,6 +439,13 @@ func (l *Ledger) GetCreator(cidx basics.CreatableIndex, ctype basics.CreatableTy
 	l.trackerMu.RLock()
 	defer l.trackerMu.RUnlock()
 	return l.accts.GetCreatorForRound(l.blockQ.latest(), cidx, ctype)
+}
+
+// GetStateDeltaForRound retrieves a ledgercore.StateDelta from the accountUpdates cache for the requested rnd
+func (l *Ledger) GetStateDeltaForRound(rnd basics.Round) (ledgercore.StateDelta, error) {
+	l.trackerMu.RLock()
+	defer l.trackerMu.RUnlock()
+	return l.accts.lookupStateDelta(rnd)
 }
 
 // VotersForStateProof returns the top online accounts at round rnd.
@@ -524,6 +535,23 @@ func (l *Ledger) lookupResource(rnd basics.Round, addr basics.Address, aidx basi
 	}
 
 	return res, nil
+}
+
+// LookupKv loads a KV pair from the accounts update
+func (l *Ledger) LookupKv(rnd basics.Round, key string) ([]byte, error) {
+	l.trackerMu.RLock()
+	defer l.trackerMu.RUnlock()
+
+	return l.accts.LookupKv(rnd, key)
+}
+
+// LookupKeysByPrefix searches keys with specific prefix, up to `maxKeyNum`
+// if `maxKeyNum` == 0, then it loads all keys with such prefix
+func (l *Ledger) LookupKeysByPrefix(round basics.Round, keyPrefix string, maxKeyNum uint64) ([]string, error) {
+	l.trackerMu.RLock()
+	defer l.trackerMu.RUnlock()
+
+	return l.accts.LookupKeysByPrefix(round, keyPrefix, maxKeyNum)
 }
 
 // LookupAgreement returns account data used by agreement.
@@ -787,6 +815,11 @@ func (l *Ledger) StartEvaluator(hdr bookkeeping.BlockHeader, paysetHint, maxTxnB
 			Validate:            true,
 			MaxTxnBytesPerBlock: maxTxnBytesPerBlock,
 		})
+}
+
+// FlushCaches flushes any pending data in caches so that it is fully available during future lookups.
+func (l *Ledger) FlushCaches() {
+	l.accts.flushCaches()
 }
 
 // Validate uses the ledger to validate block blk as a candidate next block.
